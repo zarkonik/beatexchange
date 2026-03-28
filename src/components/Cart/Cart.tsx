@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrowserProvider, Contract, formatEther } from "ethers";
+import { Contract, formatEther } from "ethers";
 import { useWallet } from "../../context/WalletContext";
 import { useCart } from "../../context/CartContext";
 import { useNavigation } from "../../context/NavigationContext";
@@ -14,7 +14,7 @@ interface ProgressItem {
 }
 
 export default function Cart() {
-  const { isConnected } = useWallet();
+  const { isConnected, provider } = useWallet();
   const { items, removeFromCart, clearCart, totalPrice } = useCart();
   const { navigateTo } = useNavigation();
 
@@ -51,8 +51,7 @@ export default function Cart() {
       }));
       setProgress(initialProgress);
 
-      const provider = new BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
+      const signer = await provider!.getSigner();
       const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
       // buy each stem one by one

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrowserProvider, Contract, formatEther } from "ethers";
+import { Contract, formatEther } from "ethers";
 import { useWallet } from "../../context/WalletContext";
 import { useCart } from "../../context/CartContext";
 import { useNavigation } from "../../context/NavigationContext";
@@ -19,7 +19,7 @@ interface Stem {
 }
 
 export default function Marketplace() {
-  const { isConnected, address } = useWallet();
+  const { isConnected, address, provider } = useWallet();
   const { addToCart, isInCart } = useCart();
   const { navigateTo } = useNavigation();
 
@@ -37,9 +37,8 @@ export default function Marketplace() {
   }, [isConnected, stems]);
 
   const getContract = async (withSigner = false) => {
-    const provider = new BrowserProvider(window.ethereum);
     if (withSigner) {
-      const signer = await provider.getSigner();
+      const signer = await provider!.getSigner();
       return new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
     }
     return new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);

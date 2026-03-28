@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrowserProvider, Contract, parseEther } from "ethers";
+import { Contract, parseEther } from "ethers";
 import { useWallet } from "../../context/WalletContext";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../../config/contract";
 import { uploadToPinata } from "../../services/pinata";
@@ -7,7 +7,7 @@ import { isWalletBanned } from "../../services/firebaseServices";
 import "./UploadStem.css";
 
 export default function UploadStem() {
-  const { isConnected, address } = useWallet();
+  const { isConnected, address, provider } = useWallet();
 
   const [title, setTitle] = useState("");
   const [personalPrice, setPersonalPrice] = useState("");
@@ -96,8 +96,8 @@ export default function UploadStem() {
 
       // step 2 — save on blockchain
       setMessage("Waiting for MetaMask confirmation...");
-      const provider = new BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
+
+      const signer = await provider!.getSigner();
       const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
       const tx = await contract.uploadStem(

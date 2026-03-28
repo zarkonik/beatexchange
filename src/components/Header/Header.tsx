@@ -119,7 +119,7 @@ export default function Header() {
               {profile?.username || shortAddress}
             </span>
             <button className="btn-disconnect" onClick={disconnectWallet}>
-              Disconnect
+              Account
             </button>
           </>
         ) : (

@@ -1,58 +1,75 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import { BrowserProvider } from "ethers";
+import { modal } from "../config/web3modal";
 
-// ── 1. Define the shape of our context ────────────────────────
 interface WalletContextType {
   address: string;
   isConnected: boolean;
+  provider: BrowserProvider | null;
   connectWallet: () => Promise<void>;
-  disconnectWallet: () => void;
+  disconnectWallet: () => Promise<void>;
 }
 
-// ── 2. Create the context with a default value ─────────────────
 const WalletContext = createContext<WalletContextType>({
   address: "",
   isConnected: false,
+  provider: null,
   connectWallet: async () => {},
-  disconnectWallet: () => {},
+  disconnectWallet: async () => {},
 });
 
-// ── 3. Create the Provider component ──────────────────────────
 export function WalletProvider({ children }: { children: ReactNode }) {
   const [address, setAddress] = useState<string>("");
   const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [provider, setProvider] = useState<BrowserProvider | null>(null);
+
+  useEffect(() => {
+    modal.subscribeProvider(async (newProvider) => {
+      if (newProvider.provider && newProvider.address) {
+        const ethersProvider = new BrowserProvider(newProvider.provider);
+        setProvider(ethersProvider);
+        setAddress(newProvider.address);
+        setIsConnected(true);
+      } else {
+        setProvider(null);
+        setAddress("");
+        setIsConnected(false);
+      }
+    });
+  }, []);
 
   const connectWallet = async () => {
-    try {
-      if (!window.ethereum) {
-        alert("MetaMask is not installed!");
-        return;
-      }
-      const provider = new BrowserProvider(window.ethereum);
-      const accounts = await provider.send("eth_requestAccounts", []);
-      setAddress(accounts[0]);
-      setIsConnected(true);
-    } catch (error) {
-      console.error("Connection failed:", error);
-    }
+    await modal.open();
   };
 
-  const disconnectWallet = () => {
-    setAddress("");
-    setIsConnected(false);
+  // ✅ correct for v5.1.11
+  const disconnectWallet = async () => {
+    try {
+      await modal.open({ view: "Account" });
+    } catch (error) {
+      // fallback — just clear state
+      setAddress("");
+      setIsConnected(false);
+      setProvider(null);
+    }
   };
 
   return (
     <WalletContext.Provider
-      value={{ address, isConnected, connectWallet, disconnectWallet }}
+      value={{
+        address,
+        isConnected,
+        provider,
+        connectWallet,
+        disconnectWallet,
+      }}
     >
       {children}
     </WalletContext.Provider>
   );
 }
 
-// ── 4. Custom hook ─────────────────────────────────────────────
 export function useWallet() {
   return useContext(WalletContext);
 }
