@@ -2,6 +2,7 @@ import { useNavigation } from "./context/NavigationContext";
 import Header from "./components/Header/Header";
 import UploadStem from "./components/UploadStem/UploadStem";
 import Marketplace from "./components/Marketplace/Marketplace";
+import Cart from "./components/Cart/Cart";
 
 function App() {
   const { currentPage } = useNavigation();
@@ -22,6 +23,7 @@ function App() {
             My Stems coming soon...
           </p>
         )}
+        {currentPage === "cart" && <Cart />}
       </main>
     </div>
   );

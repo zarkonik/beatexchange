@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react";
 import { BrowserProvider, Contract, formatEther } from "ethers";
 import { useWallet } from "../../context/WalletContext";
+import { useCart } from "../../context/CartContext";
+import { useNavigation } from "../../context/NavigationContext";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../../config/contract";
+import { ipfsToUrl } from "../../services/pinata";
 import AudioPlayer from "../AudioPlayer/AudioPlayer";
 import "./Marketplace.css";
 
-// ── Types ──────────────────────────────────
 interface Stem {
   id: number;
   producer: string;
   title: string;
-  ipfsHash: string; // ✅ NEW
+  ipfsHash: string;
   personalPrice: bigint;
   commercialPrice: bigint;
   royaltyRate: number;
@@ -18,10 +20,12 @@ interface Stem {
 
 export default function Marketplace() {
   const { isConnected, address } = useWallet();
+  const { addToCart, isInCart } = useCart();
+  const { navigateTo } = useNavigation();
 
   const [stems, setStems] = useState<Stem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [buyingId, setBuyingId] = useState<number | null>(null);
+  const [downloadingId, setDownloadingId] = useState<number | null>(null);
   const [licenses, setLicenses] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
@@ -55,7 +59,7 @@ export default function Marketplace() {
           id: i,
           producer: stem.producer,
           title: stem.title,
-          ipfsHash: stem.ipfsHash, // ✅ NEW
+          ipfsHash: stem.ipfsHash,
           personalPrice: stem.personalPrice,
           commercialPrice: stem.commercialPrice,
           royaltyRate: Number(stem.royaltyRate),
@@ -83,20 +87,26 @@ export default function Marketplace() {
     }
   };
 
-  const buyStem = async (stem: Stem, licenseType: 0 | 1) => {
+  const downloadStem = async (stem: Stem) => {
     try {
-      setBuyingId(stem.id);
-      const contract = await getContract(true);
-      const price =
-        licenseType === 0 ? stem.personalPrice : stem.commercialPrice;
-      const tx = await contract.buyStem(stem.id, licenseType, { value: price });
-      await tx.wait();
-      await checkLicenses();
-    } catch (error: any) {
-      console.error("Purchase failed:", error);
-      alert(error?.reason || error?.message || "Purchase failed");
+      setDownloadingId(stem.id);
+      const url = ipfsToUrl(stem.ipfsHash);
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("Download failed");
+      const blob = await response.blob();
+      const downloadUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = `${stem.title}.mp3`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error("Download failed:", error);
+      alert("Download failed — please try again");
     } finally {
-      setBuyingId(null);
+      setDownloadingId(null);
     }
   };
 
@@ -143,7 +153,6 @@ export default function Marketplace() {
                 By <span>{shortAddress(stem.producer)}</span>
               </p>
 
-              {/* ✅ NEW: Audio Player */}
               <AudioPlayer ipfsHash={stem.ipfsHash} />
 
               <div className="stem-prices">
@@ -167,9 +176,31 @@ export default function Marketplace() {
 
               <div className="stem-actions">
                 {licenses[stem.id] ? (
-                  <div className="licensed-badge">✅ Licensed</div>
+                  <div className="licensed-actions">
+                    <div className="licensed-badge">✅ Licensed</div>
+                    <button
+                      className="btn-download"
+                      onClick={() => downloadStem(stem)}
+                      disabled={downloadingId === stem.id}
+                    >
+                      {downloadingId === stem.id
+                        ? "⏳ Downloading..."
+                        : "⬇ Download Stem"}
+                    </button>
+                  </div>
                 ) : isOwnStem(stem) ? (
-                  <div className="licensed-badge">🎛️ Your Stem</div>
+                  <div className="licensed-actions">
+                    <div className="licensed-badge">🎛️ Your Stem</div>
+                    <button
+                      className="btn-download"
+                      onClick={() => downloadStem(stem)}
+                      disabled={downloadingId === stem.id}
+                    >
+                      {downloadingId === stem.id
+                        ? "⏳ Downloading..."
+                        : "⬇ Download Stem"}
+                    </button>
+                  </div>
                 ) : !isConnected ? (
                   <div
                     className="licensed-badge"
@@ -180,25 +211,59 @@ export default function Marketplace() {
                   >
                     Connect wallet to buy
                   </div>
+                ) : isInCart(stem.id) ? (
+                  <div className="in-cart-actions">
+                    <div
+                      className="licensed-badge"
+                      style={{
+                        color: "var(--accent)",
+                        borderColor: "var(--accent)",
+                      }}
+                    >
+                      🛒 In Cart
+                    </div>
+                    <button
+                      className="btn-view-cart"
+                      onClick={() => navigateTo("cart")}
+                    >
+                      View Cart
+                    </button>
+                  </div>
                 ) : (
                   <>
                     <button
                       className="btn-buy-personal"
-                      onClick={() => buyStem(stem, 0)}
-                      disabled={buyingId === stem.id}
+                      onClick={() =>
+                        addToCart({
+                          id: stem.id,
+                          title: stem.title,
+                          producer: stem.producer,
+                          ipfsHash: stem.ipfsHash,
+                          personalPrice: stem.personalPrice,
+                          commercialPrice: stem.commercialPrice,
+                          royaltyRate: stem.royaltyRate,
+                          licenseType: 0,
+                        })
+                      }
                     >
-                      {buyingId === stem.id
-                        ? "Buying..."
-                        : `Personal — ${formatEther(stem.personalPrice)} ETH`}
+                      + Personal — {formatEther(stem.personalPrice)} ETH
                     </button>
                     <button
                       className="btn-buy-commercial"
-                      onClick={() => buyStem(stem, 1)}
-                      disabled={buyingId === stem.id}
+                      onClick={() =>
+                        addToCart({
+                          id: stem.id,
+                          title: stem.title,
+                          producer: stem.producer,
+                          ipfsHash: stem.ipfsHash,
+                          personalPrice: stem.personalPrice,
+                          commercialPrice: stem.commercialPrice,
+                          royaltyRate: stem.royaltyRate,
+                          licenseType: 1,
+                        })
+                      }
                     >
-                      {buyingId === stem.id
-                        ? "Buying..."
-                        : `Commercial — ${formatEther(stem.commercialPrice)} ETH`}
+                      + Commercial — {formatEther(stem.commercialPrice)} ETH
                     </button>
                   </>
                 )}

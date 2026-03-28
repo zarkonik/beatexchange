@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useWallet } from "../../context/WalletContext";
 import { useNavigation } from "../../context/NavigationContext";
+import { useCart } from "../../context/CartContext";
 import "./Header.css";
 
 export default function Header() {
   const { address, isConnected, connectWallet, disconnectWallet } = useWallet();
   const { currentPage, navigateTo } = useNavigation();
+  const { itemCount } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const shortAddress = address
@@ -66,6 +68,12 @@ export default function Header() {
       </nav>
 
       <div className={`header-wallet ${menuOpen ? "open" : ""}`}>
+        {/* ✅ NEW: Cart Icon */}
+        <button className="btn-cart" onClick={() => navigateTo("cart")}>
+          🛒
+          {itemCount > 0 && <span className="cart-count">{itemCount}</span>}
+        </button>
+
         {isConnected ? (
           <>
             <span className="wallet-address">{shortAddress}</span>

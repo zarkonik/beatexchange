@@ -273,4 +273,67 @@
   .stems-grid {
     grid-template-columns: 1fr;
   }
+
+  /* ── Licensed Actions ─────────────────────── */
+  .licensed-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ── Download Button ──────────────────────── */
+  .btn-download {
+    background: transparent;
+    border: 1px solid var(--success);
+    border-radius: var(--radius);
+    color: var(--success);
+    cursor: pointer;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    padding: 10px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    width: 100%;
+  }
+
+  .btn-download:hover {
+    background: var(--success);
+    color: #000;
+  }
+
+  .btn-download:disabled {
+    background: var(--border);
+    border-color: var(--border);
+    color: var(--text-muted);
+    cursor: not-allowed;
+  }
+
+  /* ── In Cart Actions ──────────────────────── */
+  .in-cart-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn-view-cart {
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    color: var(--accent);
+    cursor: pointer;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 10px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    width: 100%;
+  }
+
+  .btn-view-cart:hover {
+    background: var(--accent);
+    color: #000;
+  }
 }
