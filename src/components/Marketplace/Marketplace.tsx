@@ -185,20 +185,20 @@ export default function Marketplace() {
                     >
                       {downloadingId === stem.id
                         ? "⏳ Downloading..."
-                        : "⬇ Download Stem"}
+                        : "↓ Download Stem"}
                     </button>
                   </div>
                 ) : isOwnStem(stem) ? (
                   <div className="licensed-actions">
                     <div className="licensed-badge">🎛️ Your Stem</div>
                     <button
-                      className="btn-download"
+                      className="btn-download-own"
                       onClick={() => downloadStem(stem)}
                       disabled={downloadingId === stem.id}
                     >
                       {downloadingId === stem.id
                         ? "⏳ Downloading..."
-                        : "⬇ Download Stem"}
+                        : "↓ Download Your Stem"}
                     </button>
                   </div>
                 ) : !isConnected ? (
