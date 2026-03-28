@@ -1,6 +1,7 @@
 import { useNavigation } from "./context/NavigationContext";
 import Header from "./components/Header/Header";
 import UploadStem from "./components/UploadStem/UploadStem";
+import Marketplace from "./components/Marketplace/Marketplace";
 
 function App() {
   const { currentPage } = useNavigation();
@@ -14,6 +15,7 @@ function App() {
             Marketplace coming soon...
           </p>
         )}
+        {currentPage === "marketplace" && <Marketplace />}
         {currentPage === "upload" && <UploadStem />}
         {currentPage === "mystems" && (
           <p style={{ padding: "40px", color: "#666" }}>
