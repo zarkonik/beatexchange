@@ -58,6 +58,15 @@ export default function Header() {
           <li>
             <a
               href="#"
+              className={currentPage === "services" ? "active" : ""}
+              onClick={(e) => navClick(e, "services")}
+            >
+              Services
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
               className={currentPage === "mystems" ? "active" : ""}
               onClick={(e) => navClick(e, "mystems")}
             >

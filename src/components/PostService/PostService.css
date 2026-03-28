@@ -1,0 +1,260 @@
+/* ── Page Layout ──────────────────────────── */
+.post-service-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 60px 24px;
+}
+
+.post-service-page h1 {
+  font-size: 26px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.post-service-page .subtitle {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-bottom: 40px;
+  letter-spacing: 1px;
+}
+
+/* ── Form ─────────────────────────────────── */
+.post-service-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: "Courier New", monospace;
+  font-size: 15px;
+  padding: 14px 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--accent);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.form-group select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+.form-group select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+/* ── Price Row ────────────────────────────── */
+.price-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ── Pricing Type Selector ────────────────── */
+.pricing-type-selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.pricing-type-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
+  padding: 12px 8px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.pricing-type-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.pricing-type-btn.active {
+  background: rgba(240, 180, 41, 0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Hint ─────────────────────────────────── */
+.hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+/* ── Submit Button ────────────────────────── */
+.btn-post-service {
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius);
+  color: #000;
+  cursor: pointer;
+  font-family: "Courier New", monospace;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding: 16px;
+  text-transform: uppercase;
+  transition: all 0.25s;
+  width: 100%;
+  margin-top: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-post-service::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.4s ease;
+}
+
+.btn-post-service:hover::before {
+  left: 150%;
+}
+
+.btn-post-service:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 4px 20px rgba(240, 180, 41, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-post-service:disabled {
+  background: var(--border);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Status ───────────────────────────────── */
+.status {
+  font-size: 13px;
+  letter-spacing: 1px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  border: 1px solid;
+}
+
+.status.loading {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.status.success {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.status.error {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+/* ── Wallet Warning ───────────────────────── */
+.wallet-warning {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  font-size: 14px;
+  letter-spacing: 1px;
+  padding: 24px;
+  text-align: center;
+}
+
+/* ── Tablet ───────────────────────────────── */
+@media (max-width: 768px) {
+  .post-service-page {
+    padding: 40px 20px;
+  }
+
+  .post-service-page h1 {
+    font-size: 22px;
+  }
+
+  .price-row {
+    grid-template-columns: 1fr;
+  }
+
+  .pricing-type-selector {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Mobile ───────────────────────────────── */
+@media (max-width: 480px) {
+  .post-service-page {
+    padding: 24px 16px;
+  }
+
+  .post-service-page h1 {
+    font-size: 18px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+}
