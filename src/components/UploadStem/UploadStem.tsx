@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BrowserProvider, Contract, parseEther } from "ethers";
 import { useWallet } from "../../context/WalletContext";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../../config/contract";
+import { uploadToPinata } from "../../services/pinata";
 import "./UploadStem.css";
 
 export default function UploadStem() {
@@ -11,16 +12,39 @@ export default function UploadStem() {
   const [personalPrice, setPersonalPrice] = useState("");
   const [commercialPrice, setCommercialPrice] = useState("");
   const [royaltyRate, setRoyaltyRate] = useState("");
+  const [audioFile, setAudioFile] = useState<File | null>(null);
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
   const [message, setMessage] = useState("");
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // only allow audio files
+    if (!file.type.startsWith("audio/")) {
+      setStatus("error");
+      setMessage("Only audio files are allowed");
+      return;
+    }
+
+    setAudioFile(file);
+    setStatus("idle");
+    setMessage("");
+  };
+
   const handleUpload = async () => {
     try {
+      // validation
       if (!title) {
         setStatus("error");
         setMessage("Title is required");
+        return;
+      }
+      if (!audioFile) {
+        setStatus("error");
+        setMessage("Audio file is required");
         return;
       }
       if (!personalPrice) {
@@ -39,15 +63,20 @@ export default function UploadStem() {
         return;
       }
 
+      // step 1 — upload to IPFS
       setStatus("loading");
-      setMessage("Waiting for MetaMask confirmation...");
+      setMessage("Uploading audio to IPFS...");
+      const ipfsHash = await uploadToPinata(audioFile);
 
+      // step 2 — save on blockchain
+      setMessage("Waiting for MetaMask confirmation...");
       const provider = new BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
       const tx = await contract.uploadStem(
         title,
+        ipfsHash,
         parseEther(personalPrice),
         parseEther(commercialPrice),
         Number(royaltyRate),
@@ -59,10 +88,12 @@ export default function UploadStem() {
       setStatus("success");
       setMessage(`✅ Stem "${title}" uploaded successfully!`);
 
+      // reset form
       setTitle("");
       setPersonalPrice("");
       setCommercialPrice("");
       setRoyaltyRate("");
+      setAudioFile(null);
     } catch (error: any) {
       setStatus("error");
       setMessage(error?.reason || error?.message || "Something went wrong");
@@ -83,10 +114,11 @@ export default function UploadStem() {
     <div className="upload-page">
       <h1>Upload Stem</h1>
       <p className="subtitle">
-        Mint your stem as an NFT and set your license prices
+        Upload your audio to IPFS and mint it as an NFT
       </p>
 
       <div className="upload-form">
+        {/* Title */}
         <div className="form-group">
           <label>Stem Title</label>
           <input
@@ -98,6 +130,39 @@ export default function UploadStem() {
           />
         </div>
 
+        {/* Audio File */}
+        <div className="form-group">
+          <label>Audio File</label>
+          <div
+            className="file-drop-zone"
+            onClick={() => document.getElementById("audio-input")?.click()}
+          >
+            {audioFile ? (
+              <div className="file-selected">
+                <span className="file-icon">🎵</span>
+                <span className="file-name">{audioFile.name}</span>
+                <span className="file-size">
+                  {(audioFile.size / 1024 / 1024).toFixed(2)} MB
+                </span>
+              </div>
+            ) : (
+              <div className="file-placeholder">
+                <span className="file-icon">⬆</span>
+                <span>Click to select audio file</span>
+                <span className="hint">MP3, WAV, FLAC supported</span>
+              </div>
+            )}
+          </div>
+          <input
+            id="audio-input"
+            type="file"
+            accept="audio/*"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+          />
+        </div>
+
+        {/* Prices */}
         <div className="price-row">
           <div className="form-group">
             <label>Personal Price (ETH)</label>
@@ -111,7 +176,6 @@ export default function UploadStem() {
             />
             <span className="hint">Non-commercial use only</span>
           </div>
-
           <div className="form-group">
             <label>Commercial Price (ETH)</label>
             <input
@@ -126,6 +190,7 @@ export default function UploadStem() {
           </div>
         </div>
 
+        {/* Royalty */}
         <div className="form-group">
           <label>Royalty Rate (%)</label>
           <input
@@ -141,10 +206,12 @@ export default function UploadStem() {
           </span>
         </div>
 
+        {/* Status */}
         {status !== "idle" && (
           <div className={`status ${status}`}>{message}</div>
         )}
 
+        {/* Submit */}
         <button
           className="btn-upload"
           onClick={handleUpload}

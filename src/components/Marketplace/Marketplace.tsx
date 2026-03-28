@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { BrowserProvider, Contract, formatEther } from "ethers";
 import { useWallet } from "../../context/WalletContext";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../../config/contract";
+import AudioPlayer from "../AudioPlayer/AudioPlayer";
 import "./Marketplace.css";
 
 // ── Types ──────────────────────────────────
@@ -9,6 +10,7 @@ interface Stem {
   id: number;
   producer: string;
   title: string;
+  ipfsHash: string; // ✅ NEW
   personalPrice: bigint;
   commercialPrice: bigint;
   royaltyRate: number;
@@ -22,16 +24,12 @@ export default function Marketplace() {
   const [buyingId, setBuyingId] = useState<number | null>(null);
   const [licenses, setLicenses] = useState<Record<number, boolean>>({});
 
-  // ── Load all stems from contract ──────────
   useEffect(() => {
     loadStems();
   }, []);
 
-  // ── Check licenses when wallet connects ───
   useEffect(() => {
-    if (isConnected && stems.length > 0) {
-      checkLicenses();
-    }
+    if (isConnected && stems.length > 0) checkLicenses();
   }, [isConnected, stems]);
 
   const getContract = async (withSigner = false) => {
@@ -47,12 +45,9 @@ export default function Marketplace() {
     try {
       setLoading(true);
       const contract = await getContract();
-
-      // get total stem count
       const count = await contract.stemCount();
       const total = Number(count);
 
-      // fetch each stem
       const stemList: Stem[] = [];
       for (let i = 0; i < total; i++) {
         const stem = await contract.getStem(i);
@@ -60,6 +55,7 @@ export default function Marketplace() {
           id: i,
           producer: stem.producer,
           title: stem.title,
+          ipfsHash: stem.ipfsHash, // ✅ NEW
           personalPrice: stem.personalPrice,
           commercialPrice: stem.commercialPrice,
           royaltyRate: Number(stem.royaltyRate),
@@ -78,12 +74,9 @@ export default function Marketplace() {
     try {
       const contract = await getContract();
       const result: Record<number, boolean> = {};
-
       for (const stem of stems) {
-        const has = await contract.hasLicense(stem.id, address);
-        result[stem.id] = has;
+        result[stem.id] = await contract.hasLicense(stem.id, address);
       }
-
       setLicenses(result);
     } catch (error) {
       console.error("Failed to check licenses:", error);
@@ -94,14 +87,10 @@ export default function Marketplace() {
     try {
       setBuyingId(stem.id);
       const contract = await getContract(true);
-
       const price =
         licenseType === 0 ? stem.personalPrice : stem.commercialPrice;
-
       const tx = await contract.buyStem(stem.id, licenseType, { value: price });
       await tx.wait();
-
-      // refresh licenses after purchase
       await checkLicenses();
     } catch (error: any) {
       console.error("Purchase failed:", error);
@@ -124,7 +113,6 @@ export default function Marketplace() {
         Browse and license stems from producers around the world
       </p>
 
-      {/* Stats */}
       <div className="stats-bar">
         <div className="stat">
           <span className="stat-value">{stems.length}</span>
@@ -138,7 +126,6 @@ export default function Marketplace() {
         </div>
       </div>
 
-      {/* Stems Grid */}
       {loading ? (
         <p className="loading-text">⏳ Loading stems...</p>
       ) : stems.length === 0 ? (
@@ -155,6 +142,9 @@ export default function Marketplace() {
               <p className="stem-producer">
                 By <span>{shortAddress(stem.producer)}</span>
               </p>
+
+              {/* ✅ NEW: Audio Player */}
+              <AudioPlayer ipfsHash={stem.ipfsHash} />
 
               <div className="stem-prices">
                 <div className="price-row-card">
@@ -176,14 +166,11 @@ export default function Marketplace() {
               </div>
 
               <div className="stem-actions">
-                {/* already licensed */}
                 {licenses[stem.id] ? (
                   <div className="licensed-badge">✅ Licensed</div>
-                ) : /* own stem */
-                isOwnStem(stem) ? (
+                ) : isOwnStem(stem) ? (
                   <div className="licensed-badge">🎛️ Your Stem</div>
-                ) : /* not connected */
-                !isConnected ? (
+                ) : !isConnected ? (
                   <div
                     className="licensed-badge"
                     style={{
@@ -194,7 +181,6 @@ export default function Marketplace() {
                     Connect wallet to buy
                   </div>
                 ) : (
-                  /* buy buttons */
                   <>
                     <button
                       className="btn-buy-personal"

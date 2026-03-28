@@ -11,11 +11,12 @@ contract StemNFT is ERC721 {
     }
 
     struct Stem {
-        address     producer;
-        string      title;
-        uint256     personalPrice;
-        uint256     commercialPrice;
-        uint8       royaltyRate;
+        address producer;
+        string  title;
+        string  ipfsHash;       // ✅ NEW: IPFS CID of the audio file
+        uint256 personalPrice;
+        uint256 commercialPrice;
+        uint8   royaltyRate;
     }
 
     struct License {
@@ -54,14 +55,17 @@ contract StemNFT is ERC721 {
 
     constructor() ERC721("BeatExchange", "BEAT") {}
 
+    // ✅ UPDATED: added ipfsHash parameter
     function uploadStem(
         string memory title,
+        string memory ipfsHash,
         uint256 personalPrice,
         uint256 commercialPrice,
         uint8 royaltyRate
     ) external {
         require(bytes(title).length > 0,         "Title cannot be empty");
         require(bytes(title).length <= 100,       "Title too long");
+        require(bytes(ipfsHash).length > 0,       "IPFS hash required");
         require(personalPrice > 0,                "Personal price must be > 0");
         require(commercialPrice > personalPrice,  "Commercial price must be higher");
         require(royaltyRate <= 50,                "Royalty rate too high");
@@ -69,6 +73,7 @@ contract StemNFT is ERC721 {
         stems[stemCount] = Stem({
             producer:        msg.sender,
             title:           title,
+            ipfsHash:        ipfsHash,
             personalPrice:   personalPrice,
             commercialPrice: commercialPrice,
             royaltyRate:     royaltyRate
@@ -161,7 +166,6 @@ contract StemNFT is ERC721 {
 
         for (uint256 i = 0; i < numStems; i++) {
             Stem memory stem = stems[song.stemIds[i]];
-
             uint256 stemShare = (msg.value * stem.royaltyRate) / (100 * numStems);
 
             if (stemShare > 0) {
