@@ -67,16 +67,6 @@ export default function AllServices() {
   const shortAddress = (addr: string) =>
     `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 
-  const formatPrice = (service: Service) => {
-    if (service.pricingType === "fixed") {
-      return `$${service.fixedPrice}`;
-    }
-    if (service.pricingType === "hourly") {
-      return `$${service.hourlyRate}/hr`;
-    }
-    return `$${service.fixedPrice} / $${service.hourlyRate}/hr`;
-  };
-
   return (
     <div className="services-page">
       <h1>Services</h1>
