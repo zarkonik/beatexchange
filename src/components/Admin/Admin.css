@@ -1,0 +1,316 @@
+/* ── Page Layout ──────────────────────────── */
+.admin-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 24px;
+}
+
+.admin-page h1 {
+  font-size: 26px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--error);
+  margin-bottom: 8px;
+}
+
+.admin-page .subtitle {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-bottom: 40px;
+  letter-spacing: 1px;
+}
+
+/* ── Tabs ─────────────────────────────────── */
+.admin-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+  padding: 12px 20px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  margin-bottom: -1px;
+}
+
+.admin-tab:hover {
+  color: var(--text);
+}
+
+.admin-tab.active {
+  border-bottom-color: var(--error);
+  color: var(--error);
+}
+
+/* ── Stats Bar ────────────────────────────── */
+.admin-stats {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.admin-stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 120px;
+  transition: border-color 0.2s;
+}
+
+.admin-stat:hover {
+  border-color: var(--accent);
+}
+
+.admin-stat-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--accent);
+  letter-spacing: 2px;
+}
+
+.admin-stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* ── Table ────────────────────────────────── */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  letter-spacing: 0.5px;
+  vertical-align: middle;
+}
+
+.admin-table tr:hover td {
+  background: var(--surface);
+}
+
+/* ── Action Buttons ───────────────────────── */
+.btn-admin-delete {
+  background: transparent;
+  border: 1px solid var(--error);
+  border-radius: var(--radius);
+  color: var(--error);
+  cursor: pointer;
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 6px 12px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.btn-admin-delete:hover {
+  background: var(--error);
+  color: #000;
+}
+
+.btn-admin-ban {
+  background: transparent;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent);
+  cursor: pointer;
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 6px 12px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  margin-right: 6px;
+}
+
+.btn-admin-ban:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+.btn-admin-unban {
+  background: transparent;
+  border: 1px solid var(--success);
+  border-radius: var(--radius);
+  color: var(--success);
+  cursor: pointer;
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 6px 12px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.btn-admin-unban:hover {
+  background: var(--success);
+  color: #000;
+}
+
+/* ── Banned Badge ─────────────────────────── */
+.banned-badge {
+  font-size: 10px;
+  color: var(--error);
+  border: 1px solid var(--error);
+  border-radius: 4px;
+  padding: 2px 8px;
+  letter-spacing: 1px;
+  margin-left: 8px;
+  text-transform: uppercase;
+}
+
+/* ── Ban Reason Input ─────────────────────── */
+.ban-reason-input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  padding: 8px 12px;
+  outline: none;
+  width: 180px;
+  transition: border-color 0.2s;
+}
+
+.ban-reason-input:focus {
+  border-color: var(--accent);
+}
+
+.ban-reason-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ── Access Denied ────────────────────────── */
+.admin-denied {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--error);
+  font-size: 16px;
+  letter-spacing: 2px;
+  border: 1px solid var(--error);
+  border-radius: var(--radius);
+  margin-top: 40px;
+}
+
+/* ── Loading ──────────────────────────────── */
+.loading-text {
+  color: var(--text-muted);
+  font-size: 14px;
+  letter-spacing: 1px;
+  padding: 40px 0;
+  text-align: center;
+}
+
+/* ── Tablet ───────────────────────────────── */
+@media (max-width: 768px) {
+  .admin-page {
+    padding: 40px 16px;
+  }
+
+  .admin-page h1 {
+    font-size: 20px;
+  }
+
+  .admin-stats {
+    gap: 12px;
+  }
+
+  .admin-stat {
+    padding: 16px;
+  }
+
+  .admin-stat-value {
+    font-size: 22px;
+  }
+
+  .admin-tabs {
+    overflow-x: auto;
+  }
+
+  .admin-tab {
+    font-size: 11px;
+    padding: 10px 14px;
+    white-space: nowrap;
+  }
+
+  .admin-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .ban-reason-input {
+    width: 120px;
+  }
+}
+
+/* ── Mobile ───────────────────────────────── */
+@media (max-width: 480px) {
+  .admin-page {
+    padding: 24px 12px;
+  }
+
+  .admin-page h1 {
+    font-size: 16px;
+    letter-spacing: 2px;
+  }
+
+  .admin-stats {
+    grid-template-columns: 1fr 1fr;
+    display: grid;
+  }
+
+  .admin-stat-value {
+    font-size: 20px;
+  }
+
+  .admin-stat-label {
+    font-size: 10px;
+  }
+
+  .btn-admin-delete,
+  .btn-admin-ban,
+  .btn-admin-unban {
+    font-size: 10px;
+    padding: 5px 8px;
+  }
+}

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useWallet } from "../../context/WalletContext";
 import { useNavigation } from "../../context/NavigationContext";
-import { postService } from "../../services/firebaseServices";
+import { postService, isWalletBanned } from "../../services/firebaseServices";
 import type {
   ServiceCategory,
   PricingType,
@@ -33,9 +33,29 @@ export default function PostService() {
     "idle" | "loading" | "success" | "error"
   >("idle");
   const [message, setMessage] = useState("");
+  const [isBanned, setIsBanned] = useState(false);
+
+  // ── Check ban status ───────────────────────
+  useEffect(() => {
+    const checkBan = async () => {
+      if (isConnected && address) {
+        const banned = await isWalletBanned(address);
+        setIsBanned(banned);
+      }
+    };
+    checkBan();
+  }, [isConnected, address]);
 
   const handleSubmit = async () => {
     try {
+      // check ban
+      const banned = await isWalletBanned(address);
+      if (banned) {
+        setStatus("error");
+        setMessage("⛔ Your wallet has been banned from posting services.");
+        return;
+      }
+
       // validation
       if (!title) {
         setStatus("error");
@@ -90,11 +110,26 @@ export default function PostService() {
     }
   };
 
+  // ── Not connected ──────────────────────────
   if (!isConnected) {
     return (
       <div className="post-service-page">
         <div className="wallet-warning">
           🔌 Connect your wallet to post a service
+        </div>
+      </div>
+    );
+  }
+
+  // ── Banned ─────────────────────────────────
+  if (isBanned) {
+    return (
+      <div className="post-service-page">
+        <div
+          className="wallet-warning"
+          style={{ borderColor: "var(--error)", color: "var(--error)" }}
+        >
+          ⛔ Your wallet has been banned from posting services.
         </div>
       </div>
     );

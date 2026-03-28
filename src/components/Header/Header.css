@@ -83,8 +83,8 @@ body {
 }
 
 .wallet-address {
-  font-size: 14px;
-  color: var(--text-muted);
+  font-size: 20px;
+
   letter-spacing: 1px;
 }
 
@@ -126,7 +126,68 @@ body {
   color: var(--error);
 }
 
-/* ── Hamburger Menu ───────────────────────── */
+/* ── Cart Button ──────────────────────────── */
+.btn-cart {
+  position: relative;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.btn-cart:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(240, 180, 41, 0.08);
+}
+
+.cart-icon {
+  stroke: #666;
+  transition: stroke 0.2s;
+}
+
+.btn-cart:hover .cart-icon {
+  stroke: var(--accent);
+}
+
+.cart-count {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: var(--accent);
+  color: #000;
+  font-family: "Courier New", monospace;
+  font-size: 10px;
+  font-weight: bold;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  animation: pop 0.2s ease;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.5);
+  }
+  70% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ── Hamburger ────────────────────────────── */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -228,68 +289,7 @@ body {
   }
 
   .wallet-address {
-    font-size: 12px;
-  }
-}
-/* ── Cart Button ──────────────────────────── */
-.btn-cart {
-  position: relative;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  color: var(--text-muted);
-  cursor: pointer;
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-
-.btn-cart:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: rgba(240, 180, 41, 0.08);
-}
-
-.btn-cart svg {
-  display: block;
-  stroke: var(--text-muted);
-  transition: all 0.2s;
-}
-
-.btn-cart:hover svg {
-  stroke: var(--accent);
-  transform: scale(1.1);
-}
-
-.cart-count {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  background: var(--accent);
-  color: #000;
-  font-family: "Courier New", monospace;
-  font-size: 10px;
-  font-weight: bold;
-  min-width: 20px;
-  height: 20px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 4px;
-  animation: pop 0.2s ease;
-}
-
-@keyframes pop {
-  0% {
-    transform: scale(0.5);
-  }
-  70% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
+    font-size: 20px;
+    font-weight: bold;
   }
 }

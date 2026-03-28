@@ -2,13 +2,18 @@ import { useState } from "react";
 import { useWallet } from "../../context/WalletContext";
 import { useNavigation } from "../../context/NavigationContext";
 import { useCart } from "../../context/CartContext";
+import { useUser } from "../../context/UserContext";
+import { isAdminWallet } from "../../config/admin";
 import "./Header.css";
 
 export default function Header() {
   const { address, isConnected, connectWallet, disconnectWallet } = useWallet();
   const { currentPage, navigateTo } = useNavigation();
   const { itemCount } = useCart();
+  const { profile } = useUser();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const isAdmin = isConnected && isAdminWallet(address);
 
   const shortAddress = address
     ? `${address.slice(0, 6)}...${address.slice(-4)}`
@@ -73,11 +78,22 @@ export default function Header() {
               My Stems
             </a>
           </li>
+          {isAdmin && (
+            <li>
+              <a
+                href="#"
+                className={currentPage === "admin" ? "active" : ""}
+                onClick={(e) => navClick(e, "admin")}
+                style={{ color: "var(--error)" }}
+              >
+                ⚙ Admin
+              </a>
+            </li>
+          )}
         </ul>
       </nav>
 
       <div className={`header-wallet ${menuOpen ? "open" : ""}`}>
-        {/* ✅ NEW: Cart Icon */}
         <button className="btn-cart" onClick={() => navigateTo("cart")}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -99,7 +115,9 @@ export default function Header() {
 
         {isConnected ? (
           <>
-            <span className="wallet-address">{shortAddress}</span>
+            <span className="wallet-address">
+              {profile?.username || shortAddress}
+            </span>
             <button className="btn-disconnect" onClick={disconnectWallet}>
               Disconnect
             </button>

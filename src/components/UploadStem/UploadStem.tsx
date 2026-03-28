@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserProvider, Contract, parseEther } from "ethers";
 import { useWallet } from "../../context/WalletContext";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../../config/contract";
 import { uploadToPinata } from "../../services/pinata";
+import { isWalletBanned } from "../../services/firebaseServices";
 import "./UploadStem.css";
 
 export default function UploadStem() {
-  const { isConnected } = useWallet();
+  const { isConnected, address } = useWallet();
 
   const [title, setTitle] = useState("");
   const [personalPrice, setPersonalPrice] = useState("");
@@ -17,15 +18,32 @@ export default function UploadStem() {
     "idle" | "loading" | "success" | "error"
   >("idle");
   const [message, setMessage] = useState("");
+  const [isBanned, setIsBanned] = useState(false);
+
+  // ── Check ban status ───────────────────────
+  useEffect(() => {
+    const checkBan = async () => {
+      if (isConnected && address) {
+        const banned = await isWalletBanned(address);
+        setIsBanned(banned);
+      }
+    };
+    checkBan();
+  }, [isConnected, address]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // only allow audio files
     if (!file.type.startsWith("audio/")) {
       setStatus("error");
-      setMessage("Only audio files are allowed");
+      setMessage("Please select an audio file — MP3, WAV or FLAC only");
+      return;
+    }
+
+    if (file.size > 100 * 1024 * 1024) {
+      setStatus("error");
+      setMessage("File is too large — maximum size is 100MB");
       return;
     }
 
@@ -36,6 +54,14 @@ export default function UploadStem() {
 
   const handleUpload = async () => {
     try {
+      // check ban
+      const banned = await isWalletBanned(address);
+      if (banned) {
+        setStatus("error");
+        setMessage("⛔ Your wallet has been banned from uploading stems.");
+        return;
+      }
+
       // validation
       if (!title) {
         setStatus("error");
@@ -100,11 +126,26 @@ export default function UploadStem() {
     }
   };
 
+  // ── Not connected ──────────────────────────
   if (!isConnected) {
     return (
       <div className="upload-page">
         <div className="wallet-warning">
           🔌 Connect your wallet to upload stems
+        </div>
+      </div>
+    );
+  }
+
+  // ── Banned ─────────────────────────────────
+  if (isBanned) {
+    return (
+      <div className="upload-page">
+        <div
+          className="wallet-warning"
+          style={{ borderColor: "var(--error)", color: "var(--error)" }}
+        >
+          ⛔ Your wallet has been banned from uploading stems.
         </div>
       </div>
     );

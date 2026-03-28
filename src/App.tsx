@@ -5,6 +5,8 @@ import Marketplace from "./components/Marketplace/Marketplace";
 import Cart from "./components/Cart/Cart";
 import PostService from "./components/PostService/PostService";
 import AllServices from "./components/AllServices/AllServices";
+import Admin from "./components/Admin/Admin";
+import UsernameModal from "./components/UsernameModal/UsernameModal";
 
 function App() {
   const { currentPage } = useNavigation();
@@ -12,12 +14,22 @@ function App() {
   return (
     <div>
       <Header />
+
+      {/* Shows automatically on first wallet connect */}
+      <UsernameModal />
+
       <main>
         {currentPage === "marketplace" && <Marketplace />}
         {currentPage === "upload" && <UploadStem />}
+        {currentPage === "mystems" && (
+          <p style={{ padding: "40px", color: "#666" }}>
+            My Stems coming soon...
+          </p>
+        )}
         {currentPage === "cart" && <Cart />}
         {currentPage === "services" && <AllServices />}
         {currentPage === "post-service" && <PostService />}
+        {currentPage === "admin" && <Admin />}
       </main>
     </div>
   );

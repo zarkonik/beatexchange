@@ -9,6 +9,8 @@ import {
   orderBy,
   serverTimestamp,
   deleteDoc,
+  setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 
@@ -23,30 +25,42 @@ export type ServiceCategory =
 export type PricingType = "fixed" | "hourly" | "both";
 
 export interface Service {
-  id?: string; // Firestore auto-generated ID
-  walletAddress: string; // who posted it
-  title: string; // e.g. "Professional Mix & Master"
+  id?: string;
+  walletAddress: string;
+  title: string;
   category: ServiceCategory;
-  description: string; // full description
+  description: string;
   pricingType: PricingType;
-  fixedPrice?: number; // in USD
-  hourlyRate?: number; // in USD
-  deliveryDays?: number; // estimated delivery time
-  portfolioUrl?: string; // optional link to work samples
-  createdAt?: any; // Firebase timestamp
+  fixedPrice?: number;
+  hourlyRate?: number;
+  deliveryDays?: number;
+  portfolioUrl?: string;
+  createdAt?: any;
 }
 
-// ── Collection name ────────────────────────
+export interface UserProfile {
+  walletAddress: string;
+  username: string;
+  avatarUrl: string;
+  createdAt?: any;
+  updatedAt?: any;
+}
+
+// ── Collection names ───────────────────────
 const COLLECTION = "services";
+const BANS_COLLECTION = "bannedWallets";
+const USERS_COLLECTION = "users";
+
+// ─────────────────────────────────────────
+// SERVICES
+// ─────────────────────────────────────────
 
 export const postService = async (
   service: Omit<Service, "id" | "createdAt">,
 ): Promise<string> => {
-  // ✅ remove undefined fields before sending to Firestore
   const cleanedService = Object.fromEntries(
     Object.entries(service).filter(([_, value]) => value !== undefined),
   );
-
   const docRef = await addDoc(collection(db, COLLECTION), {
     ...cleanedService,
     createdAt: serverTimestamp(),
@@ -54,7 +68,6 @@ export const postService = async (
   return docRef.id;
 };
 
-// ── 2. Get all services ────────────────────
 export const getAllServices = async (): Promise<Service[]> => {
   const q = query(collection(db, COLLECTION), orderBy("createdAt", "desc"));
   const snapshot = await getDocs(q);
@@ -67,7 +80,6 @@ export const getAllServices = async (): Promise<Service[]> => {
   );
 };
 
-// ── 3. Get services by category ───────────
 export const getServicesByCategory = async (
   category: ServiceCategory,
 ): Promise<Service[]> => {
@@ -86,7 +98,6 @@ export const getServicesByCategory = async (
   );
 };
 
-// ── 4. Get services by wallet ──────────────
 export const getServicesByWallet = async (
   walletAddress: string,
 ): Promise<Service[]> => {
@@ -105,7 +116,6 @@ export const getServicesByWallet = async (
   );
 };
 
-// ── 5. Get single service by ID ───────────
 export const getServiceById = async (id: string): Promise<Service | null> => {
   const docRef = doc(db, COLLECTION, id);
   const docSnap = await getDoc(docRef);
@@ -113,7 +123,102 @@ export const getServiceById = async (id: string): Promise<Service | null> => {
   return { id: docSnap.id, ...docSnap.data() } as Service;
 };
 
-// ── 6. Delete a service ────────────────────
 export const deleteService = async (id: string): Promise<void> => {
   await deleteDoc(doc(db, COLLECTION, id));
+};
+
+export const getAllServicesAdmin = async (): Promise<Service[]> => {
+  const snapshot = await getDocs(collection(db, COLLECTION));
+  return snapshot.docs.map(
+    (doc) =>
+      ({
+        id: doc.id,
+        ...doc.data(),
+      }) as Service,
+  );
+};
+
+// ─────────────────────────────────────────
+// USERS
+// ─────────────────────────────────────────
+
+export const saveUserProfile = async (
+  walletAddress: string,
+  username: string,
+): Promise<void> => {
+  const userRef = doc(db, USERS_COLLECTION, walletAddress.toLowerCase());
+  const docSnap = await getDoc(userRef);
+
+  if (docSnap.exists()) {
+    await updateDoc(userRef, {
+      username,
+      updatedAt: serverTimestamp(),
+    });
+  } else {
+    await setDoc(userRef, {
+      walletAddress: walletAddress.toLowerCase(),
+      username,
+      avatarUrl: "",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  }
+};
+
+export const getUserProfile = async (
+  walletAddress: string,
+): Promise<UserProfile | null> => {
+  const userRef = doc(db, USERS_COLLECTION, walletAddress.toLowerCase());
+  const docSnap = await getDoc(userRef);
+  if (!docSnap.exists()) return null;
+  return docSnap.data() as UserProfile;
+};
+
+export const getAllUserProfiles = async (): Promise<UserProfile[]> => {
+  const snapshot = await getDocs(collection(db, USERS_COLLECTION));
+  return snapshot.docs.map((doc) => doc.data() as UserProfile);
+};
+
+export const isUsernameTaken = async (username: string): Promise<boolean> => {
+  const q = query(
+    collection(db, USERS_COLLECTION),
+    where("username", "==", username.toLowerCase()),
+  );
+  const snapshot = await getDocs(q);
+  return !snapshot.empty;
+};
+
+// ─────────────────────────────────────────
+// BANS
+// ─────────────────────────────────────────
+
+export const banWallet = async (
+  walletAddress: string,
+  reason: string,
+): Promise<void> => {
+  await addDoc(collection(db, BANS_COLLECTION), {
+    walletAddress: walletAddress.toLowerCase(),
+    reason,
+    bannedAt: serverTimestamp(),
+  });
+};
+
+export const unbanWallet = async (banId: string): Promise<void> => {
+  await deleteDoc(doc(db, BANS_COLLECTION, banId));
+};
+
+export const isWalletBanned = async (
+  walletAddress: string,
+): Promise<boolean> => {
+  const q = query(
+    collection(db, BANS_COLLECTION),
+    where("walletAddress", "==", walletAddress.toLowerCase()),
+  );
+  const snapshot = await getDocs(q);
+  return !snapshot.empty;
+};
+
+export const getAllBannedWallets = async (): Promise<any[]> => {
+  const snapshot = await getDocs(collection(db, BANS_COLLECTION));
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 };

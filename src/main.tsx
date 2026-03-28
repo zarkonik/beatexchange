@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { WalletProvider } from "./context/WalletContext";
 import { NavigationProvider } from "./context/NavigationContext";
 import { CartProvider } from "./context/CartContext";
+import { UserProvider } from "./context/UserContext";
 import App from "./App";
 import "./index.css";
 
@@ -11,7 +12,9 @@ createRoot(document.getElementById("root")!).render(
     <WalletProvider>
       <NavigationProvider>
         <CartProvider>
-          <App />
+          <UserProvider>
+            <App />
+          </UserProvider>
         </CartProvider>
       </NavigationProvider>
     </WalletProvider>
