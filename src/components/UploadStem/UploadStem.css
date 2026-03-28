@@ -1,0 +1,183 @@
+/* ── Page Layout ──────────────────────────── */
+.upload-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 60px 24px;
+}
+
+.upload-page h1 {
+  font-size: 26px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.upload-page .subtitle {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-bottom: 40px;
+  letter-spacing: 1px;
+}
+
+/* ── Form ─────────────────────────────────── */
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+}
+
+.form-group input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: "Courier New", monospace;
+  font-size: 15px;
+  padding: 14px 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.form-group input:focus {
+  border-color: var(--accent);
+}
+
+.form-group input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ── Price Row ────────────────────────────── */
+.price-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ── Hint ─────────────────────────────────── */
+.hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+/* ── Submit Button ────────────────────────── */
+.btn-upload {
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius);
+  color: #000;
+  cursor: pointer;
+  font-family: "Courier New", monospace;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding: 16px;
+  text-transform: uppercase;
+  transition:
+    background 0.2s,
+    transform 0.1s;
+  margin-top: 8px;
+  width: 100%;
+}
+
+.btn-upload:hover {
+  background: var(--accent-hover);
+}
+
+.btn-upload:active {
+  transform: scale(0.98);
+}
+
+.btn-upload:disabled {
+  background: var(--border);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Status Messages ──────────────────────── */
+.status {
+  font-size: 13px;
+  letter-spacing: 1px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  border: 1px solid;
+}
+
+.status.loading {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.status.success {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.status.error {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+/* ── Wallet Warning ───────────────────────── */
+.wallet-warning {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  font-size: 14px;
+  letter-spacing: 1px;
+  padding: 24px;
+  text-align: center;
+}
+
+/* ── Tablet ───────────────────────────────── */
+@media (max-width: 768px) {
+  .upload-page {
+    padding: 40px 20px;
+  }
+
+  .upload-page h1 {
+    font-size: 22px;
+  }
+
+  .price-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Mobile ───────────────────────────────── */
+@media (max-width: 480px) {
+  .upload-page {
+    padding: 24px 16px;
+  }
+
+  .upload-page h1 {
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+
+  .form-group input {
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+
+  .btn-upload {
+    font-size: 13px;
+    padding: 14px;
+  }
+}
