@@ -7,6 +7,7 @@ import PostService from "./components/PostService/PostService";
 import AllServices from "./components/AllServices/AllServices";
 import Admin from "./components/Admin/Admin";
 import UsernameModal from "./components/UsernameModal/UsernameModal";
+import MyStems from "./components/MyStems/MyStems";
 
 function App() {
   const { currentPage } = useNavigation();
@@ -21,15 +22,11 @@ function App() {
       <main>
         {currentPage === "marketplace" && <Marketplace />}
         {currentPage === "upload" && <UploadStem />}
-        {currentPage === "mystems" && (
-          <p style={{ padding: "40px", color: "#666" }}>
-            My Stems coming soon...
-          </p>
-        )}
         {currentPage === "cart" && <Cart />}
         {currentPage === "services" && <AllServices />}
         {currentPage === "post-service" && <PostService />}
         {currentPage === "admin" && <Admin />}
+        {currentPage === "mystems" && <MyStems />}
       </main>
     </div>
   );
