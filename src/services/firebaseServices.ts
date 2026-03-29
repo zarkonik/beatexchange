@@ -42,6 +42,7 @@ export interface UserProfile {
   walletAddress: string;
   username: string;
   avatarUrl: string;
+  hasAvatar?: boolean;
   createdAt?: any;
   updatedAt?: any;
 }
@@ -221,4 +222,37 @@ export const isWalletBanned = async (
 export const getAllBannedWallets = async (): Promise<any[]> => {
   const snapshot = await getDocs(collection(db, BANS_COLLECTION));
   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+};
+
+// ── Avatar collection ──────────────────────
+const AVATARS_COLLECTION = "avatars";
+
+// ── Save avatar in separate collection ─────
+export const saveAvatar = async (
+  walletAddress: string,
+  base64: string,
+): Promise<void> => {
+  const avatarRef = doc(db, AVATARS_COLLECTION, walletAddress.toLowerCase());
+  await setDoc(avatarRef, {
+    walletAddress: walletAddress.toLowerCase(),
+    base64,
+    updatedAt: serverTimestamp(),
+  });
+
+  // save reference in user profile
+  const userRef = doc(db, USERS_COLLECTION, walletAddress.toLowerCase());
+  await updateDoc(userRef, {
+    hasAvatar: true,
+    updatedAt: serverTimestamp(),
+  });
+};
+
+// ── Get avatar ─────────────────────────────
+export const getAvatar = async (
+  walletAddress: string,
+): Promise<string | null> => {
+  const avatarRef = doc(db, AVATARS_COLLECTION, walletAddress.toLowerCase());
+  const docSnap = await getDoc(avatarRef);
+  if (!docSnap.exists()) return null;
+  return docSnap.data().base64;
 };

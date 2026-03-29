@@ -10,7 +10,7 @@ export default function Header() {
   const { address, isConnected, connectWallet, disconnectWallet } = useWallet();
   const { currentPage, navigateTo } = useNavigation();
   const { itemCount } = useCart();
-  const { profile } = useUser();
+  const { profile, avatar } = useUser();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const isAdmin = isConnected && isAdminWallet(address);
@@ -115,9 +115,33 @@ export default function Header() {
 
         {isConnected ? (
           <>
-            <span className="wallet-address">
-              {profile?.username || shortAddress}
-            </span>
+            <div
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+            >
+              {avatar ? (
+                <img
+                  src={avatar}
+                  alt="avatar"
+                  style={{
+                    width: "1.8rem",
+                    height: "1.8rem",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    border: "1px solid var(--accent)",
+                  }}
+                />
+              ) : (
+                <span style={{ fontSize: "1.2rem" }}>🎛️</span>
+              )}
+              <span
+                className="wallet-address"
+                style={{ cursor: "pointer" }}
+                onClick={() => navigateTo("profile")}
+                title="View profile"
+              >
+                {profile?.username || shortAddress}
+              </span>
+            </div>
             <button className="btn-disconnect" onClick={disconnectWallet}>
               Account
             </button>

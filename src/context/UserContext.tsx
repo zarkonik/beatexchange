@@ -4,41 +4,46 @@ import { useWallet } from "./WalletContext";
 import {
   getUserProfile,
   saveUserProfile,
+  saveAvatar,
+  getAvatar,
   isUsernameTaken,
 } from "../services/firebaseServices";
 import type { UserProfile } from "../services/firebaseServices";
 
-// ── Context shape ──────────────────────────
 interface UserContextType {
   profile: UserProfile | null;
+  avatar: string | null;
   showUsernameModal: boolean;
   isLoadingProfile: boolean;
   saveUsername: (username: string) => Promise<string | null>;
+  updateAvatar: (base64: string) => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType>({
   profile: null,
+  avatar: null,
   showUsernameModal: false,
   isLoadingProfile: true,
   saveUsername: async () => null,
+  updateAvatar: async () => {},
   refreshProfile: async () => {},
 });
 
-// ── Provider ───────────────────────────────
 export function UserProvider({ children }: { children: ReactNode }) {
   const { address, isConnected } = useWallet();
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [avatar, setAvatar] = useState<string | null>(null);
   const [showUsernameModal, setShowUsernameModal] = useState(false);
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 
-  // load profile when wallet connects
   useEffect(() => {
     if (isConnected && address) {
       loadProfile();
     } else {
       setProfile(null);
+      setAvatar(null);
       setShowUsernameModal(false);
     }
   }, [isConnected, address]);
@@ -51,8 +56,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
       if (userProfile) {
         setProfile(userProfile);
         setShowUsernameModal(false);
+
+        // load avatar separately
+        if (userProfile.hasAvatar) {
+          const avatarBase64 = await getAvatar(address);
+          setAvatar(avatarBase64);
+        }
       } else {
-        // first time connecting — show username modal
         setProfile(null);
         setShowUsernameModal(true);
       }
@@ -64,20 +74,22 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   const saveUsername = async (username: string): Promise<string | null> => {
-    // validate format — letters and numbers only, max 20 chars
     const isValid = /^[a-zA-Z0-9]{1,20}$/.test(username);
     if (!isValid)
       return "Username must be letters and numbers only, max 20 characters";
 
-    // check if taken
     const taken = await isUsernameTaken(username);
     if (taken) return "Username is already taken";
 
-    // save to Firebase
     await saveUserProfile(address, username);
     await loadProfile();
     setShowUsernameModal(false);
-    return null; // null means no error
+    return null;
+  };
+
+  const updateAvatar = async (base64: string): Promise<void> => {
+    await saveAvatar(address, base64);
+    setAvatar(base64);
   };
 
   const refreshProfile = async () => {
@@ -88,9 +100,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
     <UserContext.Provider
       value={{
         profile,
+        avatar,
         showUsernameModal,
         isLoadingProfile,
         saveUsername,
+        updateAvatar,
         refreshProfile,
       }}
     >
@@ -99,7 +113,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// ── Custom hook ────────────────────────────
 export function useUser() {
   return useContext(UserContext);
 }

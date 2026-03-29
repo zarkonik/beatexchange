@@ -8,6 +8,7 @@ import AllServices from "./components/AllServices/AllServices";
 import Admin from "./components/Admin/Admin";
 import UsernameModal from "./components/UsernameModal/UsernameModal";
 import MyStems from "./components/MyStems/MyStems";
+import Profile from "./components/Profile/Profile";
 
 function App() {
   const { currentPage } = useNavigation();
@@ -27,6 +28,7 @@ function App() {
         {currentPage === "post-service" && <PostService />}
         {currentPage === "admin" && <Admin />}
         {currentPage === "mystems" && <MyStems />}
+        {currentPage === "profile" && <Profile />}
       </main>
     </div>
   );
