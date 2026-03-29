@@ -2,21 +2,21 @@
 .post-service-page {
   max-width: 640px;
   margin: 0 auto;
-  padding: 60px 24px;
+  padding: 3rem 1.5rem;
 }
 
 .post-service-page h1 {
-  font-size: 26px;
+  font-size: 1.8rem;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 8px;
+  margin-bottom: 0.4rem;
 }
 
 .post-service-page .subtitle {
   color: var(--text-muted);
-  font-size: 13px;
-  margin-bottom: 40px;
+  font-size: 0.9rem;
+  margin-bottom: 2.5rem;
   letter-spacing: 1px;
 }
 
@@ -24,17 +24,17 @@
 .post-service-form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 1.5rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .form-group label {
-  font-size: 12px;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 2px;
   color: var(--text-muted);
@@ -48,8 +48,8 @@
   border-radius: var(--radius);
   color: var(--text);
   font-family: "Courier New", monospace;
-  font-size: 15px;
-  padding: 14px 16px;
+  font-size: 0.9rem;
+  padding: 0.8rem 1rem;
   outline: none;
   transition: border-color 0.2s;
   width: 100%;
@@ -71,8 +71,8 @@
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 16px center;
-  padding-right: 40px;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
 }
 
 .form-group select option {
@@ -82,7 +82,7 @@
 
 .form-group textarea {
   resize: vertical;
-  min-height: 120px;
+  min-height: 7rem;
   line-height: 1.6;
 }
 
@@ -90,14 +90,14 @@
 .price-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 1rem;
 }
 
 /* ── Pricing Type Selector ────────────────── */
 .pricing-type-selector {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 0.6rem;
 }
 
 .pricing-type-btn {
@@ -107,9 +107,9 @@
   color: var(--text-muted);
   cursor: pointer;
   font-family: "Courier New", monospace;
-  font-size: 12px;
+  font-size: 0.75rem;
   letter-spacing: 1px;
-  padding: 12px 8px;
+  padding: 0.75rem 0.5rem;
   text-transform: uppercase;
   transition: all 0.2s;
   text-align: center;
@@ -128,7 +128,7 @@
 
 /* ── Hint ─────────────────────────────────── */
 .hint {
-  font-size: 11px;
+  font-size: 0.7rem;
   color: var(--text-muted);
   letter-spacing: 0.5px;
 }
@@ -141,14 +141,14 @@
   color: #000;
   cursor: pointer;
   font-family: "Courier New", monospace;
-  font-size: 14px;
+  font-size: 0.85rem;
   font-weight: bold;
   letter-spacing: 2px;
-  padding: 16px;
+  padding: 1rem;
   text-transform: uppercase;
   transition: all 0.25s;
   width: 100%;
-  margin-top: 8px;
+  margin-top: 0.5rem;
   position: relative;
   overflow: hidden;
 }
@@ -189,9 +189,9 @@
 
 /* ── Status ───────────────────────────────── */
 .status {
-  font-size: 13px;
+  font-size: 0.85rem;
   letter-spacing: 1px;
-  padding: 14px 16px;
+  padding: 0.9rem 1rem;
   border-radius: var(--radius);
   border: 1px solid;
 }
@@ -216,20 +216,20 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 0.9rem;
   letter-spacing: 1px;
-  padding: 24px;
+  padding: 1.5rem;
   text-align: center;
 }
 
 /* ── Tablet ───────────────────────────────── */
 @media (max-width: 768px) {
   .post-service-page {
-    padding: 40px 20px;
+    padding: 2rem 1.2rem;
   }
 
   .post-service-page h1 {
-    font-size: 22px;
+    font-size: 1.4rem;
   }
 
   .price-row {
@@ -244,17 +244,17 @@
 /* ── Mobile ───────────────────────────────── */
 @media (max-width: 480px) {
   .post-service-page {
-    padding: 24px 16px;
+    padding: 1.5rem 1rem;
   }
 
   .post-service-page h1 {
-    font-size: 18px;
+    font-size: 1.2rem;
   }
 
   .form-group input,
   .form-group select,
   .form-group textarea {
-    font-size: 14px;
-    padding: 12px 14px;
+    font-size: 0.85rem;
+    padding: 0.7rem 0.8rem;
   }
 }

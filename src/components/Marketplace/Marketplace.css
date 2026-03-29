@@ -2,48 +2,48 @@
 .marketplace-page {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 60px 24px;
+  padding: 3rem 1.5rem;
 }
 
 .marketplace-page h1 {
-  font-size: 26px;
+  font-size: 2rem;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 8px;
+  margin-bottom: 0.4rem;
 }
 
 .marketplace-page .subtitle {
   color: var(--text-muted);
-  font-size: 13px;
-  margin-bottom: 40px;
+  font-size: 1rem;
+  margin-bottom: 2.5rem;
   letter-spacing: 1px;
 }
 
 /* ── Stats Bar ────────────────────────────── */
 .stats-bar {
   display: flex;
-  gap: 32px;
-  margin-bottom: 40px;
-  padding-bottom: 24px;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--border);
 }
 
 .stat {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.3rem;
 }
 
 .stat-value {
-  font-size: 24px;
+  font-size: 2rem;
   font-weight: bold;
   color: var(--accent);
   letter-spacing: 2px;
 }
 
 .stat-label {
-  font-size: 11px;
+  font-size: 0.7rem;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -52,8 +52,8 @@
 /* ── Grid ─────────────────────────────────── */
 .stems-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
 }
 
 /* ── Stem Card ────────────────────────────── */
@@ -61,10 +61,10 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 24px;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
   transition:
     border-color 0.2s,
     transform 0.2s;
@@ -79,11 +79,11 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .stem-title {
-  font-size: 16px;
+  font-size: 1.5rem;
   font-weight: bold;
   color: var(--text);
   letter-spacing: 1px;
@@ -91,14 +91,14 @@
 }
 
 .stem-id {
-  font-size: 11px;
+  font-size: 0.8rem;
   color: var(--text-muted);
   letter-spacing: 1px;
   white-space: nowrap;
 }
 
 .stem-producer {
-  font-size: 12px;
+  font-size: 0.85rem;
   color: var(--text-muted);
   letter-spacing: 1px;
 }
@@ -111,8 +111,8 @@
 .stem-prices {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 14px;
+  gap: 0.5rem;
+  padding: 0.9rem;
   background: var(--bg);
   border-radius: var(--radius);
   border: 1px solid var(--border);
@@ -125,20 +125,20 @@
 }
 
 .price-label {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .price-value {
-  font-size: 14px;
+  font-size: 1rem;
   color: var(--text);
   font-weight: bold;
 }
 
 .royalty-badge {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--accent);
   letter-spacing: 1px;
   border: 1px solid var(--accent);
@@ -150,7 +150,7 @@
 .stem-actions {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .btn-buy-personal {
@@ -160,9 +160,9 @@
   color: var(--accent);
   cursor: pointer;
   font-family: "Courier New", monospace;
-  font-size: 12px;
+  font-size: 0.8rem;
   letter-spacing: 2px;
-  padding: 10px;
+  padding: 0.7rem;
   text-transform: uppercase;
   transition: all 0.2s;
   width: 100%;
@@ -180,10 +180,10 @@
   color: #000;
   cursor: pointer;
   font-family: "Courier New", monospace;
-  font-size: 12px;
+  font-size: 0.8rem;
   font-weight: bold;
   letter-spacing: 2px;
-  padding: 10px;
+  padding: 0.7rem;
   text-transform: uppercase;
   transition: all 0.2s;
   width: 100%;
@@ -202,84 +202,20 @@
 }
 
 .licensed-badge {
-  font-size: 12px;
+  font-size: 0.85rem;
   color: var(--success);
   letter-spacing: 1px;
   text-align: center;
-  padding: 10px;
+  padding: 0.7rem;
   border: 1px solid var(--success);
   border-radius: var(--radius);
-}
-
-/* ── Loading & Empty ──────────────────────── */
-.loading-text {
-  color: var(--text-muted);
-  font-size: 14px;
-  letter-spacing: 1px;
-  padding: 40px 0;
-  text-align: center;
-}
-
-.empty-text {
-  color: var(--text-muted);
-  font-size: 14px;
-  letter-spacing: 1px;
-  padding: 40px 0;
-  text-align: center;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-
-/* ── Tablet ───────────────────────────────── */
-@media (max-width: 768px) {
-  .marketplace-page {
-    padding: 40px 20px;
-  }
-
-  .marketplace-page h1 {
-    font-size: 22px;
-  }
-
-  .stats-bar {
-    gap: 20px;
-  }
-
-  .stat-value {
-    font-size: 20px;
-  }
-
-  .stems-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 16px;
-  }
-}
-
-/* ── Mobile ───────────────────────────────── */
-@media (max-width: 480px) {
-  .marketplace-page {
-    padding: 24px 16px;
-  }
-
-  .marketplace-page h1 {
-    font-size: 18px;
-    letter-spacing: 2px;
-  }
-
-  .stats-bar {
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-
-  .stems-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* ── Licensed Actions ─────────────────────── */
 .licensed-actions {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 /* ── Download Button ──────────────────────── */
@@ -287,57 +223,59 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 0.5rem;
   background: linear-gradient(
     135deg,
-    rgba(77, 255, 145, 0.1),
-    rgba(77, 255, 145, 0.05)
+    rgba(77, 255, 145, 0.08),
+    rgba(77, 255, 145, 0.03)
   );
   border: 1px solid var(--success);
   border-radius: var(--radius);
   color: var(--success);
   cursor: pointer;
   font-family: "Courier New", monospace;
-  font-size: 12px;
+  font-size: 0.8rem;
   font-weight: bold;
   letter-spacing: 2px;
-  padding: 12px;
+  padding: 0.8rem;
   text-transform: uppercase;
-  transition: all 0.2s;
+  transition: all 0.25s;
   width: 100%;
   position: relative;
   overflow: hidden;
 }
 
-.btn-download::before {
+.btn-download::after {
   content: "";
   position: absolute;
   top: 0;
   left: -100%;
-  width: 100%;
+  width: 60%;
   height: 100%;
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(77, 255, 145, 0.1),
+    rgba(77, 255, 145, 0.15),
     transparent
   );
-  transition: left 0.4s ease;
+  transition: left 0.5s ease;
 }
 
-.btn-download:hover::before {
-  left: 100%;
+.btn-download:hover::after {
+  left: 150%;
 }
 
 .btn-download:hover {
   background: var(--success);
   color: #000;
-  box-shadow: 0 0 16px rgba(77, 255, 145, 0.3);
-  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(77, 255, 145, 0.25);
+  transform: translateY(-2px);
+  letter-spacing: 3px;
 }
 
 .btn-download:active {
-  transform: translateY(0);
+  transform: translateY(0px);
+  box-shadow: none;
 }
 
 .btn-download:disabled {
@@ -347,44 +285,19 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+  letter-spacing: 2px;
 }
 
-.btn-download:disabled::before {
+.btn-download:disabled::after {
   display: none;
 }
 
-/* ── In Cart Actions ──────────────────────── */
-.in-cart-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.btn-view-cart {
-  background: transparent;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  color: var(--accent);
-  cursor: pointer;
-  font-family: "Courier New", monospace;
-  font-size: 12px;
-  letter-spacing: 2px;
-  padding: 10px;
-  text-transform: uppercase;
-  transition: all 0.2s;
-  width: 100%;
-}
-
-.btn-view-cart:hover {
-  background: var(--accent);
-  color: #000;
-}
 /* ── Download Own Stem Button ─────────────── */
 .btn-download-own {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 0.5rem;
   background: linear-gradient(
     135deg,
     rgba(240, 180, 41, 0.08),
@@ -395,10 +308,10 @@
   color: var(--accent);
   cursor: pointer;
   font-family: "Courier New", monospace;
-  font-size: 12px;
+  font-size: 0.8rem;
   font-weight: bold;
   letter-spacing: 2px;
-  padding: 14px;
+  padding: 0.8rem;
   text-transform: uppercase;
   transition: all 0.25s;
   width: 100%;
@@ -447,4 +360,94 @@
   transform: none;
   box-shadow: none;
   letter-spacing: 2px;
+}
+
+/* ── In Cart Actions ──────────────────────── */
+.in-cart-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.btn-view-cart {
+  background: transparent;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent);
+  cursor: pointer;
+  font-family: "Courier New", monospace;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  padding: 0.7rem;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.btn-view-cart:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+/* ── Loading & Empty ──────────────────────── */
+.loading-text {
+  color: var(--text-muted);
+  font-size: 1rem;
+  letter-spacing: 1px;
+  padding: 3rem 0;
+  text-align: center;
+}
+
+.empty-text {
+  color: var(--text-muted);
+  font-size: 1rem;
+  letter-spacing: 1px;
+  padding: 3rem;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/* ── Tablet ───────────────────────────────── */
+@media (max-width: 768px) {
+  .marketplace-page {
+    padding: 2rem 1.2rem;
+  }
+
+  .marketplace-page h1 {
+    font-size: 1.6rem;
+  }
+
+  .stats-bar {
+    gap: 1.2rem;
+  }
+
+  .stat-value {
+    font-size: 1.6rem;
+  }
+
+  .stems-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+}
+
+/* ── Mobile ───────────────────────────────── */
+@media (max-width: 480px) {
+  .marketplace-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .marketplace-page h1 {
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+  }
+
+  .stems-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-value {
+    font-size: 1.4rem;
+  }
 }

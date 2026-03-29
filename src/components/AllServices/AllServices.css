@@ -2,21 +2,21 @@
 .services-page {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 60px 24px;
+  padding: 3rem 1.5rem;
 }
 
 .services-page h1 {
-  font-size: 26px;
+  font-size: 1.8rem;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 8px;
+  margin-bottom: 0.4rem;
 }
 
 .services-page .subtitle {
   color: var(--text-muted);
-  font-size: 13px;
-  margin-bottom: 40px;
+  font-size: 0.9rem;
+  margin-bottom: 2.5rem;
   letter-spacing: 1px;
 }
 
@@ -25,15 +25,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 32px;
-  gap: 16px;
+  margin-bottom: 2rem;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 
 /* ── Category Filter ──────────────────────── */
 .category-filter {
   display: flex;
-  gap: 8px;
+  gap: 0.5rem;
   flex-wrap: wrap;
 }
 
@@ -44,9 +44,9 @@
   color: var(--text-muted);
   cursor: pointer;
   font-family: "Courier New", monospace;
-  font-size: 11px;
+  font-size: 0.65rem;
   letter-spacing: 1px;
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   text-transform: uppercase;
   transition: all 0.2s;
   white-space: nowrap;
@@ -71,10 +71,10 @@
   color: #000;
   cursor: pointer;
   font-family: "Courier New", monospace;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: bold;
   letter-spacing: 2px;
-  padding: 10px 20px;
+  padding: 0.6rem 1.2rem;
   text-transform: uppercase;
   transition: all 0.2s;
   white-space: nowrap;
@@ -89,7 +89,7 @@
 .services-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
+  gap: 1.5rem;
 }
 
 /* ── Service Card ─────────────────────────── */
@@ -97,10 +97,10 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 24px;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
   transition:
     border-color 0.2s,
     transform 0.2s;
@@ -117,22 +117,22 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .service-category-badge {
-  font-size: 10px;
+  font-size: 0.6rem;
   letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--accent);
   border: 1px solid var(--accent);
   border-radius: 4px;
-  padding: 3px 8px;
+  padding: 0.2rem 0.5rem;
   white-space: nowrap;
 }
 
 .service-title {
-  font-size: 17px;
+  font-size: 1rem;
   font-weight: bold;
   color: var(--text);
   letter-spacing: 1px;
@@ -140,7 +140,7 @@
 }
 
 .service-provider {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-muted);
   letter-spacing: 1px;
 }
@@ -151,7 +151,7 @@
 
 /* ── Description ──────────────────────────── */
 .service-description {
-  font-size: 13px;
+  font-size: 0.85rem;
   color: var(--text-muted);
   line-height: 1.6;
   letter-spacing: 0.5px;
@@ -164,37 +164,37 @@
 /* ── Pricing ──────────────────────────────── */
 .service-pricing {
   display: flex;
-  gap: 12px;
+  gap: 0.75rem;
   flex-wrap: wrap;
 }
 
 .price-tag {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 0.2rem;
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 10px 14px;
+  padding: 0.6rem 0.9rem;
   flex: 1;
 }
 
 .price-tag-label {
-  font-size: 10px;
+  font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--text-muted);
 }
 
 .price-tag-value {
-  font-size: 18px;
+  font-size: 1.1rem;
   font-weight: bold;
   color: var(--text);
   letter-spacing: 1px;
 }
 
 .price-tag-unit {
-  font-size: 11px;
+  font-size: 0.65rem;
   color: var(--text-muted);
 }
 
@@ -203,12 +203,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 12px;
+  padding-top: 0.75rem;
   border-top: 1px solid var(--border);
 }
 
 .service-delivery {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-muted);
   letter-spacing: 1px;
 }
@@ -224,10 +224,10 @@
   color: var(--accent);
   cursor: pointer;
   font-family: "Courier New", monospace;
-  font-size: 11px;
+  font-size: 0.7rem;
   font-weight: bold;
   letter-spacing: 2px;
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   text-transform: uppercase;
   transition: all 0.2s;
 }
@@ -239,7 +239,7 @@
 
 /* ── Portfolio Link ───────────────────────── */
 .portfolio-link {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-muted);
   letter-spacing: 1px;
   text-decoration: none;
@@ -253,17 +253,17 @@
 /* ── Loading & Empty ──────────────────────── */
 .loading-text {
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 0.9rem;
   letter-spacing: 1px;
-  padding: 40px 0;
+  padding: 3rem 0;
   text-align: center;
 }
 
 .empty-text {
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 0.9rem;
   letter-spacing: 1px;
-  padding: 40px;
+  padding: 3rem;
   text-align: center;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -277,9 +277,9 @@
   color: var(--text-muted);
   cursor: pointer;
   font-family: "Courier New", monospace;
-  font-size: 11px;
+  font-size: 0.7rem;
   letter-spacing: 1px;
-  padding: 8px 12px;
+  padding: 0.5rem 0.75rem;
   transition: all 0.2s;
 }
 
@@ -291,11 +291,11 @@
 /* ── Tablet ───────────────────────────────── */
 @media (max-width: 768px) {
   .services-page {
-    padding: 40px 20px;
+    padding: 2rem 1.2rem;
   }
 
   .services-page h1 {
-    font-size: 22px;
+    font-size: 1.4rem;
   }
 
   .services-grid {
@@ -316,19 +316,19 @@
 /* ── Mobile ───────────────────────────────── */
 @media (max-width: 480px) {
   .services-page {
-    padding: 24px 16px;
+    padding: 1.5rem 1rem;
   }
 
   .services-page h1 {
-    font-size: 18px;
+    font-size: 1.2rem;
   }
 
   .category-filter {
-    gap: 6px;
+    gap: 0.4rem;
   }
 
   .category-btn {
-    font-size: 10px;
-    padding: 6px 12px;
+    font-size: 0.6rem;
+    padding: 0.4rem 0.75rem;
   }
 }

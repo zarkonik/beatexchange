@@ -2,37 +2,37 @@
 .cart-page {
   max-width: 800px;
   margin: 0 auto;
-  padding: 60px 24px;
+  padding: 3rem 1.5rem;
 }
 
 .cart-page h1 {
-  font-size: 26px;
+  font-size: 1.8rem;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 8px;
+  margin-bottom: 0.4rem;
 }
 
 .cart-page .subtitle {
   color: var(--text-muted);
-  font-size: 13px;
-  margin-bottom: 40px;
+  font-size: 0.9rem;
+  margin-bottom: 2.5rem;
   letter-spacing: 1px;
 }
 
 /* ── Empty Cart ───────────────────────────── */
 .cart-empty {
   text-align: center;
-  padding: 60px 24px;
+  padding: 3rem 1.5rem;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 0.9rem;
   letter-spacing: 1px;
 }
 
 .cart-empty p {
-  margin-bottom: 24px;
+  margin-bottom: 1.5rem;
 }
 
 .btn-browse {
@@ -42,9 +42,9 @@
   color: var(--accent);
   cursor: pointer;
   font-family: "Courier New", monospace;
-  font-size: 13px;
+  font-size: 0.8rem;
   letter-spacing: 2px;
-  padding: 12px 24px;
+  padding: 0.7rem 1.5rem;
   text-transform: uppercase;
   transition: all 0.2s;
 }
@@ -58,19 +58,19 @@
 .cart-items {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 32px;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .cart-item {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 20px;
+  padding: 1.2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 1rem;
   transition: border-color 0.2s;
 }
 
@@ -82,19 +82,19 @@
 .cart-item-info {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0.4rem;
   flex: 1;
 }
 
 .cart-item-title {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: bold;
   color: var(--text);
   letter-spacing: 1px;
 }
 
 .cart-item-producer {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-muted);
   letter-spacing: 1px;
 }
@@ -105,9 +105,9 @@
 
 /* ── License Badge ────────────────────────── */
 .cart-license-badge {
-  font-size: 11px;
+  font-size: 0.7rem;
   letter-spacing: 1px;
-  padding: 4px 10px;
+  padding: 0.2rem 0.6rem;
   border-radius: 4px;
   border: 1px solid;
   width: fit-content;
@@ -125,7 +125,7 @@
 
 /* ── Item Price ───────────────────────────── */
 .cart-item-price {
-  font-size: 18px;
+  font-size: 1.1rem;
   font-weight: bold;
   color: var(--text);
   letter-spacing: 1px;
@@ -139,8 +139,8 @@
   border-radius: var(--radius);
   color: var(--text-muted);
   cursor: pointer;
-  font-size: 14px;
-  padding: 6px 10px;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem;
   transition: all 0.2s;
   flex-shrink: 0;
 }
@@ -155,25 +155,25 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 24px;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .cart-summary h2 {
-  font-size: 14px;
+  font-size: 0.75rem;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--text-muted);
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 14px;
+  font-size: 0.9rem;
 }
 
 .summary-label {
@@ -189,7 +189,7 @@
 .summary-divider {
   border: none;
   border-top: 1px solid var(--border);
-  margin: 4px 0;
+  margin: 0.3rem 0;
 }
 
 .summary-total {
@@ -199,14 +199,14 @@
 }
 
 .summary-total-label {
-  font-size: 16px;
+  font-size: 1rem;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--text);
 }
 
 .summary-total-value {
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: bold;
   color: var(--accent);
   letter-spacing: 2px;
@@ -220,14 +220,14 @@
   color: #000;
   cursor: pointer;
   font-family: "Courier New", monospace;
-  font-size: 14px;
+  font-size: 0.85rem;
   font-weight: bold;
   letter-spacing: 2px;
-  padding: 18px;
+  padding: 1rem;
   text-transform: uppercase;
   transition: all 0.25s;
   width: 100%;
-  margin-top: 8px;
+  margin-top: 0.5rem;
   position: relative;
   overflow: hidden;
 }
@@ -281,9 +281,9 @@
   color: var(--text-muted);
   cursor: pointer;
   font-family: "Courier New", monospace;
-  font-size: 12px;
+  font-size: 0.75rem;
   letter-spacing: 1px;
-  padding: 8px 0;
+  padding: 0.5rem 0;
   text-decoration: underline;
   transition: color 0.2s;
   text-align: center;
@@ -295,9 +295,9 @@
 
 /* ── Status ───────────────────────────────── */
 .status {
-  font-size: 13px;
+  font-size: 0.85rem;
   letter-spacing: 1px;
-  padding: 14px 16px;
+  padding: 0.9rem 1rem;
   border-radius: var(--radius);
   border: 1px solid;
 }
@@ -321,8 +321,8 @@
 .checkout-progress {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 16px;
+  gap: 0.5rem;
+  padding: 1rem;
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -331,8 +331,8 @@
 .progress-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 13px;
+  gap: 0.6rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
   letter-spacing: 1px;
 }
@@ -348,11 +348,11 @@
 /* ── Tablet ───────────────────────────────── */
 @media (max-width: 768px) {
   .cart-page {
-    padding: 40px 20px;
+    padding: 2rem 1.2rem;
   }
 
   .cart-page h1 {
-    font-size: 22px;
+    font-size: 1.4rem;
   }
 
   .cart-item {
@@ -360,25 +360,25 @@
   }
 
   .cart-item-price {
-    font-size: 16px;
+    font-size: 1rem;
   }
 }
 
 /* ── Mobile ───────────────────────────────── */
 @media (max-width: 480px) {
   .cart-page {
-    padding: 24px 16px;
+    padding: 1.5rem 1rem;
   }
 
   .cart-page h1 {
-    font-size: 18px;
+    font-size: 1.2rem;
   }
 
   .cart-item {
-    padding: 16px;
+    padding: 1rem;
   }
 
   .summary-total-value {
-    font-size: 20px;
+    font-size: 1.2rem;
   }
 }

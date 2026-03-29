@@ -2,21 +2,21 @@
 .upload-page {
   max-width: 640px;
   margin: 0 auto;
-  padding: 60px 24px;
+  padding: 3rem 1.5rem;
 }
 
 .upload-page h1 {
-  font-size: 26px;
+  font-size: 1.8rem;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 8px;
+  margin-bottom: 0.4rem;
 }
 
 .upload-page .subtitle {
   color: var(--text-muted);
-  font-size: 13px;
-  margin-bottom: 40px;
+  font-size: 0.9rem;
+  margin-bottom: 2.5rem;
   letter-spacing: 1px;
 }
 
@@ -24,17 +24,17 @@
 .upload-form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 1.5rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .form-group label {
-  font-size: 12px;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 2px;
   color: var(--text-muted);
@@ -46,8 +46,8 @@
   border-radius: var(--radius);
   color: var(--text);
   font-family: "Courier New", monospace;
-  font-size: 15px;
-  padding: 14px 16px;
+  font-size: 0.9rem;
+  padding: 0.8rem 1rem;
   outline: none;
   transition: border-color 0.2s;
   width: 100%;
@@ -65,14 +65,61 @@
 .price-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 1rem;
 }
 
 /* ── Hint ─────────────────────────────────── */
 .hint {
-  font-size: 11px;
+  font-size: 0.7rem;
   color: var(--text-muted);
   letter-spacing: 0.5px;
+}
+
+/* ── File Drop Zone ───────────────────────── */
+.file-drop-zone {
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  padding: 2rem 1rem;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+
+.file-drop-zone:hover {
+  border-color: var(--accent);
+}
+
+.file-placeholder {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+
+.file-selected {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.file-icon {
+  font-size: 1.8rem;
+}
+
+.file-name {
+  font-size: 0.85rem;
+  color: var(--text);
+  letter-spacing: 1px;
+  word-break: break-all;
+}
+
+.file-size {
+  font-size: 0.75rem;
+  color: var(--text-muted);
 }
 
 /* ── Submit Button ────────────────────────── */
@@ -83,24 +130,42 @@
   color: #000;
   cursor: pointer;
   font-family: "Courier New", monospace;
-  font-size: 14px;
+  font-size: 0.85rem;
   font-weight: bold;
   letter-spacing: 2px;
-  padding: 16px;
+  padding: 1rem;
   text-transform: uppercase;
-  transition:
-    background 0.2s,
-    transform 0.1s;
-  margin-top: 8px;
+  transition: all 0.25s;
   width: 100%;
+  margin-top: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-upload::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.4s ease;
+}
+
+.btn-upload:hover::before {
+  left: 150%;
 }
 
 .btn-upload:hover {
   background: var(--accent-hover);
-}
-
-.btn-upload:active {
-  transform: scale(0.98);
+  box-shadow: 0 4px 20px rgba(240, 180, 41, 0.3);
+  transform: translateY(-1px);
 }
 
 .btn-upload:disabled {
@@ -108,13 +173,14 @@
   color: var(--text-muted);
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
 /* ── Status Messages ──────────────────────── */
 .status {
-  font-size: 13px;
+  font-size: 0.85rem;
   letter-spacing: 1px;
-  padding: 14px 16px;
+  padding: 0.9rem 1rem;
   border-radius: var(--radius);
   border: 1px solid;
 }
@@ -139,20 +205,20 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 0.9rem;
   letter-spacing: 1px;
-  padding: 24px;
+  padding: 1.5rem;
   text-align: center;
 }
 
 /* ── Tablet ───────────────────────────────── */
 @media (max-width: 768px) {
   .upload-page {
-    padding: 40px 20px;
+    padding: 2rem 1.2rem;
   }
 
   .upload-page h1 {
-    font-size: 22px;
+    font-size: 1.4rem;
   }
 
   .price-row {
@@ -163,68 +229,21 @@
 /* ── Mobile ───────────────────────────────── */
 @media (max-width: 480px) {
   .upload-page {
-    padding: 24px 16px;
+    padding: 1.5rem 1rem;
   }
 
   .upload-page h1 {
-    font-size: 18px;
+    font-size: 1.2rem;
     letter-spacing: 2px;
   }
 
   .form-group input {
-    font-size: 14px;
-    padding: 12px 14px;
+    font-size: 0.85rem;
+    padding: 0.7rem 0.8rem;
   }
 
   .btn-upload {
-    font-size: 13px;
-    padding: 14px;
-  }
-
-  /* ── File Drop Zone ───────────────────────── */
-  .file-drop-zone {
-    background: var(--surface);
-    border: 1px dashed var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    padding: 32px 16px;
-    text-align: center;
-    transition: border-color 0.2s;
-  }
-
-  .file-drop-zone:hover {
-    border-color: var(--accent);
-  }
-
-  .file-placeholder {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    color: var(--text-muted);
-    font-size: 14px;
-    letter-spacing: 1px;
-  }
-
-  .file-selected {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    align-items: center;
-  }
-
-  .file-icon {
-    font-size: 28px;
-  }
-
-  .file-name {
-    font-size: 14px;
-    color: var(--text);
-    letter-spacing: 1px;
-    word-break: break-all;
-  }
-
-  .file-size {
-    font-size: 12px;
-    color: var(--text-muted);
+    font-size: 0.8rem;
+    padding: 0.9rem;
   }
 }
