@@ -1,0 +1,340 @@
+/* ── Page Layout ──────────────────────────── */
+.upload-pack-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.upload-pack-page h1 {
+  font-size: 1.8rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+
+.upload-pack-page .subtitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 2.5rem;
+  letter-spacing: 1px;
+}
+
+/* ── Form ─────────────────────────────────── */
+.upload-pack-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: "Courier New", monospace;
+  font-size: 0.9rem;
+  padding: 0.8rem 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--accent);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.form-group select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.form-group select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 7rem;
+  line-height: 1.6;
+}
+
+/* ── Type Selector ────────────────────────── */
+.type-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.type-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: "Courier New", monospace;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  padding: 1rem;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.type-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.type-btn.active {
+  background: rgba(240, 180, 41, 0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.type-btn-icon {
+  font-size: 1.5rem;
+}
+
+/* ── Two Column Row ───────────────────────── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* ── File Drop Zone ───────────────────────── */
+.file-drop-zone {
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  padding: 2rem 1rem;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+
+.file-drop-zone:hover {
+  border-color: var(--accent);
+}
+
+.file-placeholder {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  align-items: center;
+}
+
+.file-selected {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.file-icon {
+  font-size: 1.8rem;
+}
+
+.file-name {
+  font-size: 0.85rem;
+  color: var(--text);
+  letter-spacing: 1px;
+  word-break: break-all;
+}
+
+.file-size {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ── Hint ─────────────────────────────────── */
+.hint {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+/* ── Upload Progress ──────────────────────── */
+.upload-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progress-bar-bg {
+  background: var(--border);
+  border-radius: 4px;
+  height: 6px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  background: var(--accent);
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+/* ── Submit Button ────────────────────────── */
+.btn-upload-pack {
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius);
+  color: #000;
+  cursor: pointer;
+  font-family: "Courier New", monospace;
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding: 1rem;
+  text-transform: uppercase;
+  transition: all 0.25s;
+  width: 100%;
+  margin-top: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-upload-pack::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.4s ease;
+}
+
+.btn-upload-pack:hover::before {
+  left: 150%;
+}
+
+.btn-upload-pack:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 4px 20px rgba(240, 180, 41, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-upload-pack:disabled {
+  background: var(--border);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Status ───────────────────────────────── */
+.status {
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  padding: 0.9rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid;
+}
+
+.status.loading {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.status.success {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.status.error {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+/* ── Wallet Warning ───────────────────────── */
+.wallet-warning {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+/* ── Tablet ───────────────────────────────── */
+@media (max-width: 768px) {
+  .upload-pack-page {
+    padding: 2rem 1.2rem;
+  }
+
+  .upload-pack-page h1 {
+    font-size: 1.4rem;
+  }
+
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .type-selector {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ── Mobile ───────────────────────────────── */
+@media (max-width: 480px) {
+  .upload-pack-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .upload-pack-page h1 {
+    font-size: 1.2rem;
+  }
+
+  .type-selector {
+    grid-template-columns: 1fr;
+  }
+}

@@ -15,6 +15,8 @@ export default function AudioPlayer({ ipfsHash }: AudioPlayerProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
+  const audioUrl = ipfsHash.startsWith("http") ? ipfsHash : ipfsToUrl(ipfsHash);
+
   const togglePlay = () => {
     if (!audioRef.current) return;
     if (isPlaying) {
@@ -35,7 +37,7 @@ export default function AudioPlayer({ ipfsHash }: AudioPlayerProps) {
     const s = Math.floor(seconds % 60);
     return `${m}:${s.toString().padStart(2, "0")}`;
   };
-  console.log("Audio URL:", ipfsToUrl(ipfsHash));
+  console.log("Audio URL:", audioUrl);
   if (hasError) {
     return (
       <div className="audio-player">
@@ -49,7 +51,7 @@ export default function AudioPlayer({ ipfsHash }: AudioPlayerProps) {
       {/* Hidden HTML5 audio element */}
       <audio
         ref={audioRef}
-        src={ipfsToUrl(ipfsHash)}
+        src={audioUrl}
         onLoadedMetadata={() => {
           setDuration(audioRef.current?.duration || 0);
           setIsLoading(false);

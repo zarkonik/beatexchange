@@ -51,13 +51,23 @@ export default function Header() {
               Marketplace
             </a>
           </li>
+
           <li>
             <a
               href="#"
               className={currentPage === "upload" ? "active" : ""}
               onClick={(e) => navClick(e, "upload")}
             >
-              Upload
+              Upload Stem
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              className={currentPage === "upload-pack" ? "active" : ""}
+              onClick={(e) => navClick(e, "upload-pack")}
+            >
+              Upload Pack
             </a>
           </li>
           <li>

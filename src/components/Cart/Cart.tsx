@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { Contract, formatEther } from "ethers";
+import { BrowserProvider, Contract, formatEther, parseEther } from "ethers";
 import { useWallet } from "../../context/WalletContext";
 import { useCart } from "../../context/CartContext";
 import { useNavigation } from "../../context/NavigationContext";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../../config/contract";
+import { purchasePack } from "../../services/packPayment";
+import { recordPackPurchase } from "../../services/firebaseServices";
 import "./Cart.css";
 
-// tracks purchase progress per item
 interface ProgressItem {
-  id: number;
+  id: string;
   title: string;
   status: "pending" | "buying" | "done" | "error";
 }
@@ -24,8 +25,15 @@ export default function Cart() {
   const [message, setMessage] = useState("");
   const [progress, setProgress] = useState<ProgressItem[]>([]);
 
-  const getPrice = (item: (typeof items)[0]) =>
-    item.licenseType === 0 ? item.personalPrice : item.commercialPrice;
+  const getPrice = (item: (typeof items)[0]) => {
+    if (item.type === "stem") {
+      return item.licenseType === 0
+        ? item.personalPrice!
+        : item.commercialPrice!;
+    } else {
+      return BigInt(Math.round(Number(item.price) * 1e18));
+    }
+  };
 
   const handleCheckout = async () => {
     if (!isConnected) {
@@ -33,7 +41,6 @@ export default function Cart() {
       setMessage("Please connect your wallet first");
       return;
     }
-
     if (items.length === 0) {
       setStatus("error");
       setMessage("Your cart is empty");
@@ -43,7 +50,6 @@ export default function Cart() {
     try {
       setStatus("loading");
 
-      // initialize progress tracker
       const initialProgress: ProgressItem[] = items.map((item) => ({
         id: item.id,
         title: item.title,
@@ -51,29 +57,42 @@ export default function Cart() {
       }));
       setProgress(initialProgress);
 
-      const signer = await provider!.getSigner();
+      const p = provider || new BrowserProvider(window.ethereum);
+      const signer = await p.getSigner();
+      const address = await signer.getAddress();
       const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
-      // buy each stem one by one
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
 
-        // mark current item as buying
         setProgress((prev) =>
           prev.map((p) => (p.id === item.id ? { ...p, status: "buying" } : p)),
         );
 
         setMessage(`Buying "${item.title}" — confirm in MetaMask...`);
 
-        const price = getPrice(item);
-        const tx = await contract.buyStem(item.id, item.licenseType, {
-          value: price,
-        });
+        if (item.type === "stem") {
+          // ── Buy stem via smart contract ──────
+          const price = getPrice(item);
+          const tx = await contract.buyStem(Number(item.id), item.licenseType, {
+            value: price,
+          });
+          setMessage(`Waiting for "${item.title}" confirmation...`);
+          await tx.wait();
+        } else {
+          // ── Buy pack via direct ETH transfer ──
+          const txHash = await purchasePack(item.producer, item.price!, p);
 
-        setMessage(`Waiting for "${item.title}" confirmation...`);
-        await tx.wait();
+          // record purchase in Firebase
+          await recordPackPurchase({
+            packId: item.id,
+            buyer: address.toLowerCase(),
+            producer: item.producer,
+            txHash,
+            priceEth: item.price!,
+          });
+        }
 
-        // mark as done
         setProgress((prev) =>
           prev.map((p) => (p.id === item.id ? { ...p, status: "done" } : p)),
         );
@@ -81,14 +100,12 @@ export default function Cart() {
 
       setStatus("success");
       setMessage(
-        `✅ All ${items.length} stem${items.length > 1 ? "s" : ""} purchased successfully!`,
+        `✅ All ${items.length} item${items.length > 1 ? "s" : ""} purchased successfully!`,
       );
       clearCart();
     } catch (error: any) {
       setStatus("error");
       setMessage(error?.reason || error?.message || "Purchase failed");
-
-      // mark remaining items as error
       setProgress((prev) =>
         prev.map((p) =>
           p.status === "buying" || p.status === "pending"
@@ -99,7 +116,6 @@ export default function Cart() {
     }
   };
 
-  // ── Empty cart ─────────────────────────────
   if (items.length === 0 && status !== "success") {
     return (
       <div className="cart-page">
@@ -120,9 +136,8 @@ export default function Cart() {
   return (
     <div className="cart-page">
       <h1>Cart</h1>
-      <p className="subtitle">Review your stems and complete your purchase</p>
+      <p className="subtitle">Review your items and complete your purchase</p>
 
-      {/* ── Cart Items ──────────────────────── */}
       {status !== "success" && (
         <div className="cart-items">
           {items.map((item) => (
@@ -135,13 +150,20 @@ export default function Cart() {
                     {item.producer.slice(0, 6)}...{item.producer.slice(-4)}
                   </span>
                 </span>
-                <span
-                  className={`cart-license-badge ${item.licenseType === 0 ? "personal" : "commercial"}`}
-                >
-                  {item.licenseType === 0
-                    ? "Personal License"
-                    : "Commercial License"}
-                </span>
+                {item.type === "stem" && (
+                  <span
+                    className={`cart-license-badge ${item.licenseType === 0 ? "personal" : "commercial"}`}
+                  >
+                    {item.licenseType === 0
+                      ? "Personal License"
+                      : "Commercial License"}
+                  </span>
+                )}
+                {item.type === "pack" && (
+                  <span className="cart-license-badge commercial">
+                    Full Pack
+                  </span>
+                )}
               </div>
 
               <span className="cart-item-price">
@@ -160,7 +182,6 @@ export default function Cart() {
         </div>
       )}
 
-      {/* ── Checkout Progress ───────────────── */}
       {progress.length > 0 && (
         <div className="checkout-progress">
           {progress.map((p) => (
@@ -178,14 +199,13 @@ export default function Cart() {
         </div>
       )}
 
-      {/* ── Status Message ──────────────────── */}
-      {status !== "idle" && <div className={`status ${status}`}>{message}</div>}
+      {status !== "idle" && status !== "loading" && (
+        <div className={`status ${status}`}>{message}</div>
+      )}
 
-      {/* ── Order Summary ───────────────────── */}
       {status !== "success" && (
         <div className="cart-summary">
           <h2>Order Summary</h2>
-
           {items.map((item) => (
             <div key={item.id} className="summary-row">
               <span className="summary-label">{item.title}</span>
@@ -194,16 +214,13 @@ export default function Cart() {
               </span>
             </div>
           ))}
-
           <hr className="summary-divider" />
-
           <div className="summary-total">
             <span className="summary-total-label">Total</span>
             <span className="summary-total-value">
               {formatEther(totalPrice)} ETH
             </span>
           </div>
-
           <button
             className="btn-checkout"
             onClick={handleCheckout}
@@ -213,7 +230,6 @@ export default function Cart() {
               ? "⏳ Processing..."
               : `Buy All — ${formatEther(totalPrice)} ETH`}
           </button>
-
           <button
             className="btn-clear"
             onClick={clearCart}
@@ -224,10 +240,9 @@ export default function Cart() {
         </div>
       )}
 
-      {/* ── Success State ───────────────────── */}
       {status === "success" && (
         <div className="cart-empty">
-          <p>🎉 Purchase complete! Go to Marketplace to download your stems.</p>
+          <p>🎉 Purchase complete!</p>
           <button
             className="btn-browse"
             onClick={() => navigateTo("marketplace")}

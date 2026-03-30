@@ -24,6 +24,60 @@ export type ServiceCategory =
 
 export type PricingType = "fixed" | "hourly" | "both";
 
+export type SamplePackCategory = "Sample Pack";
+export type SoundbankCategory = "Soundbank";
+export type PackCategory = SamplePackCategory | SoundbankCategory;
+
+// ── Sample Pack interface ──────────────────
+export interface SamplePack {
+  id?: string;
+  producer: string;
+  title: string;
+  description: string;
+  category: "Sample Pack"; // ← locked to Sample Pack only
+  price: string; // in ETH
+  previewUrl: string; // IPFS audio preview
+  fileUrl: string; // Backblaze B2 ZIP URL
+  fileSize: string; // e.g. "250MB"
+  fileCount: number; // number of samples in pack
+  genre: string;
+  bpm?: string; // e.g. "120-140"
+  createdAt?: any;
+}
+
+// ── Soundbank interface ────────────────────
+export interface Soundbank {
+  id?: string;
+  producer: string;
+  title: string;
+  description: string;
+  category: "Soundbank"; // ← locked to Soundbank only
+  price: string; // in ETH
+  previewUrl: string; // IPFS audio preview
+  fileUrl: string; // Backblaze B2 ZIP URL
+  fileSize: string; // e.g. "500MB"
+  instrument: string; // e.g. "Piano", "Synth", "Bass"
+  format: string; // e.g. "VST", "Kontakt", "WAV"
+  presetCount: number; // number of presets/sounds
+  createdAt?: any;
+}
+
+export interface PackPurchase {
+  id?: string;
+  packId: string;
+  buyer: string;
+  producer: string;
+  txHash: string;
+  priceEth: string;
+  purchasedAt?: any;
+}
+
+const PACKS_COLLECTION = "samplePacks";
+const PURCHASES_COLLECTION = "packPurchases";
+
+// ── Union type for both ────────────────────
+export type Pack = SamplePack | Soundbank;
+
 export interface Service {
   id?: string;
   walletAddress: string;
@@ -255,4 +309,134 @@ export const getAvatar = async (
   const docSnap = await getDoc(avatarRef);
   if (!docSnap.exists()) return null;
   return docSnap.data().base64;
+};
+
+// ── Upload a sample pack listing ───────────
+export const createSamplePack = async (
+  pack: Omit<SamplePack, "id" | "createdAt">,
+): Promise<string> => {
+  const cleanedPack = Object.fromEntries(
+    Object.entries(pack).filter(([_, v]) => v !== undefined),
+  );
+  const docRef = await addDoc(collection(db, PACKS_COLLECTION), {
+    ...cleanedPack,
+    createdAt: serverTimestamp(),
+  });
+  return docRef.id;
+};
+
+// ── Get all sample packs ───────────────────
+export const getAllSamplePacks = async (): Promise<SamplePack[]> => {
+  const q = query(
+    collection(db, PACKS_COLLECTION),
+    orderBy("createdAt", "desc"),
+  );
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(
+    (doc) =>
+      ({
+        id: doc.id,
+        ...doc.data(),
+      }) as SamplePack,
+  );
+};
+
+// ── Get packs by category ──────────────────
+export const getSamplePacksByCategory = async (
+  category: PackCategory,
+): Promise<SamplePack[]> => {
+  const q = query(
+    collection(db, PACKS_COLLECTION),
+    where("category", "==", category),
+    orderBy("createdAt", "desc"),
+  );
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(
+    (doc) =>
+      ({
+        id: doc.id,
+        ...doc.data(),
+      }) as SamplePack,
+  );
+};
+
+// ── Get packs by producer ──────────────────
+export const getSamplePacksByProducer = async (
+  walletAddress: string,
+): Promise<SamplePack[]> => {
+  const q = query(
+    collection(db, PACKS_COLLECTION),
+    where("producer", "==", walletAddress.toLowerCase()),
+    orderBy("createdAt", "desc"),
+  );
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(
+    (doc) =>
+      ({
+        id: doc.id,
+        ...doc.data(),
+      }) as SamplePack,
+  );
+};
+
+// ── Delete a sample pack ───────────────────
+export const deleteSamplePack = async (id: string): Promise<void> => {
+  await deleteDoc(doc(db, PACKS_COLLECTION, id));
+};
+
+// ── Get sample packs only ──────────────────
+export const getAllSamplePacksOnly = async (): Promise<SamplePack[]> => {
+  const q = query(
+    collection(db, PACKS_COLLECTION),
+    where("category", "==", "Sample Pack"),
+    orderBy("createdAt", "desc"),
+  );
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(
+    (doc) =>
+      ({
+        id: doc.id,
+        ...doc.data(),
+      }) as SamplePack,
+  );
+};
+
+// ── Get soundbanks only ────────────────────
+export const getAllSoundbanks = async (): Promise<Soundbank[]> => {
+  const q = query(
+    collection(db, PACKS_COLLECTION),
+    where("category", "==", "Soundbank"),
+    orderBy("createdAt", "desc"),
+  );
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(
+    (doc) =>
+      ({
+        id: doc.id,
+        ...doc.data(),
+      }) as Soundbank,
+  );
+};
+
+// ── Check if buyer has purchased a pack ────
+export const hasPackPurchase = async (
+  packId: string,
+  buyer: string,
+): Promise<boolean> => {
+  const q = query(
+    collection(db, PURCHASES_COLLECTION),
+    where("packId", "==", packId),
+    where("buyer", "==", buyer.toLowerCase()),
+  );
+  const snapshot = await getDocs(q);
+  return !snapshot.empty;
+};
+// ── Record a pack purchase ─────────────────
+export const recordPackPurchase = async (
+  purchase: Omit<PackPurchase, "id" | "purchasedAt">,
+): Promise<void> => {
+  await addDoc(collection(db, PURCHASES_COLLECTION), {
+    ...purchase,
+    purchasedAt: serverTimestamp(),
+  });
 };

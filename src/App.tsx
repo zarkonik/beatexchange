@@ -9,6 +9,7 @@ import Admin from "./components/Admin/Admin";
 import UsernameModal from "./components/UsernameModal/UsernameModal";
 import MyStems from "./components/MyStems/MyStems";
 import Profile from "./components/Profile/Profile";
+import UploadPack from "./components/UploadPack/UploadPack";
 
 function App() {
   const { currentPage } = useNavigation();
@@ -29,6 +30,7 @@ function App() {
         {currentPage === "admin" && <Admin />}
         {currentPage === "mystems" && <MyStems />}
         {currentPage === "profile" && <Profile />}
+        {currentPage === "upload-pack" && <UploadPack />}
       </main>
     </div>
   );
