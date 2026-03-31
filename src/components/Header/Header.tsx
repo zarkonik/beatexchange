@@ -5,6 +5,7 @@ import { useCart } from "../../context/CartContext";
 import { useUser } from "../../context/UserContext";
 import { isAdminWallet } from "../../config/admin";
 import "./Header.css";
+import logo from "../../assets/LogoBE.png";
 
 export default function Header() {
   const { address, isConnected, connectWallet, disconnectWallet } = useWallet();
@@ -27,8 +28,8 @@ export default function Header() {
 
   return (
     <header className="header">
-      <div className="header-logo">
-        Beat<span>Exchange</span>
+      <div className="header-logo" onClick={() => navigateTo("marketplace")}>
+        <img src={logo} alt="BeatExchange" className="header-logo-img" />
       </div>
 
       <button

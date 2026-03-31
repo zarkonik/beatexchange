@@ -279,3 +279,48 @@
     font-size: 0.65rem;
   }
 }
+/* ── Header ───────────────────────────────── */
+.header {
+  border-bottom: 1px solid var(--border);
+  padding: 0.5rem 1.5rem; /* ✅ less padding to keep height small */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 1rem;
+  flex-wrap: nowrap;
+  height: 4rem; /* ✅ fixed height */
+}
+
+/* ── Logo ─────────────────────────────────── */
+.header-logo {
+  display: flex;
+  flex-direction: row; /* ✅ back to row — logo left, text right */
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text);
+  cursor: pointer;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.header-logo-img {
+  position: relative;
+  top: 1.5rem;
+  left: 2rem;
+  width: 9rem; /* ✅ bigger */
+  height: 6.8rem;
+  object-fit: cover;
+  border-radius: 50%; /* ✅ circle */
+}
+
+.logo-beat {
+  color: var(--accent);
+}
