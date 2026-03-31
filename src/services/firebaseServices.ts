@@ -11,6 +11,7 @@ import {
   deleteDoc,
   setDoc,
   updateDoc,
+  increment,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 
@@ -439,4 +440,160 @@ export const recordPackPurchase = async (
     ...purchase,
     purchasedAt: serverTimestamp(),
   });
+};
+
+// ── Forum Types ────────────────────────────
+export interface ForumPost {
+  id?: string;
+  title: string;
+  content: string;
+  author: string; // wallet address
+  username: string;
+  likes: string[]; // wallet addresses who liked
+  commentCount: number;
+  createdAt?: any;
+}
+
+export interface ForumComment {
+  id?: string;
+  postId: string;
+  content: string;
+  author: string; // wallet address
+  username: string;
+  likes: string[]; // wallet addresses who liked
+  createdAt?: any;
+}
+
+// ── Collections ────────────────────────────
+const POSTS_COLLECTION = "forumPosts";
+const COMMENTS_COLLECTION = "forumComments";
+
+// ── Create post ────────────────────────────
+export const createForumPost = async (
+  post: Omit<ForumPost, "id" | "createdAt" | "likes" | "commentCount">,
+): Promise<string> => {
+  const docRef = await addDoc(collection(db, POSTS_COLLECTION), {
+    ...post,
+    likes: [],
+    commentCount: 0,
+    createdAt: serverTimestamp(),
+  });
+  return docRef.id;
+};
+
+// ── Get all posts ──────────────────────────
+export const getForumPosts = async (): Promise<ForumPost[]> => {
+  const q = query(
+    collection(db, POSTS_COLLECTION),
+    orderBy("createdAt", "desc"),
+  );
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(
+    (doc) =>
+      ({
+        id: doc.id,
+        ...doc.data(),
+      }) as ForumPost,
+  );
+};
+
+// ── Toggle like on post ────────────────────
+export const togglePostLike = async (
+  postId: string,
+  address: string,
+): Promise<void> => {
+  const postRef = doc(db, POSTS_COLLECTION, postId);
+  const postDoc = await getDoc(postRef);
+  if (!postDoc.exists()) return;
+
+  const likes = postDoc.data().likes as string[];
+  const hasLiked = likes.includes(address.toLowerCase());
+
+  await updateDoc(postRef, {
+    likes: hasLiked
+      ? likes.filter((a) => a !== address.toLowerCase())
+      : [...likes, address.toLowerCase()],
+  });
+};
+
+// ── Get comments for post ──────────────────
+export const getPostComments = async (
+  postId: string,
+): Promise<ForumComment[]> => {
+  const q = query(
+    collection(db, COMMENTS_COLLECTION),
+    where("postId", "==", postId),
+    orderBy("createdAt", "asc"),
+  );
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(
+    (doc) =>
+      ({
+        id: doc.id,
+        ...doc.data(),
+      }) as ForumComment,
+  );
+};
+
+// ── Create comment ─────────────────────────
+export const createForumComment = async (
+  comment: Omit<ForumComment, "id" | "createdAt" | "likes">,
+): Promise<void> => {
+  // add comment
+  await addDoc(collection(db, COMMENTS_COLLECTION), {
+    ...comment,
+    likes: [],
+    createdAt: serverTimestamp(),
+  });
+
+  // increment comment count on post
+  const postRef = doc(db, POSTS_COLLECTION, comment.postId);
+  await updateDoc(postRef, {
+    commentCount: increment(comment.postId ? 1 : 0),
+  });
+};
+
+// ── Toggle like on comment ─────────────────
+export const toggleCommentLike = async (
+  commentId: string,
+  address: string,
+): Promise<void> => {
+  const commentRef = doc(db, COMMENTS_COLLECTION, commentId);
+  const commentDoc = await getDoc(commentRef);
+  if (!commentDoc.exists()) return;
+
+  const likes = commentDoc.data().likes as string[];
+  const hasLiked = likes.includes(address.toLowerCase());
+
+  await updateDoc(commentRef, {
+    likes: hasLiked
+      ? likes.filter((a) => a !== address.toLowerCase())
+      : [...likes, address.toLowerCase()],
+  });
+};
+
+// ── Delete post ────────────────────────────
+export const deleteForumPost = async (postId: string): Promise<void> => {
+  await deleteDoc(doc(db, POSTS_COLLECTION, postId));
+};
+
+// ── Delete comment ─────────────────────────
+export const deleteForumComment = async (commentId: string): Promise<void> => {
+  await deleteDoc(doc(db, COMMENTS_COLLECTION, commentId));
+};
+
+// ── Get profile by wallet ──────────────────
+export const getProfileByUsername = async (
+  username: string,
+): Promise<UserProfile | null> => {
+  const q = query(
+    collection(db, USERS_COLLECTION),
+    where("username", "==", username),
+  );
+  const snapshot = await getDocs(q);
+  if (snapshot.empty) return null;
+  return {
+    id: snapshot.docs[0].id,
+    ...snapshot.docs[0].data(),
+  } as unknown as UserProfile;
 };

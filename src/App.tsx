@@ -11,6 +11,7 @@ import MyStems from "./components/MyStems/MyStems";
 import Profile from "./components/Profile/Profile";
 import UploadPack from "./components/UploadPack/UploadPack";
 import Landing from "./components/Landing/Landing";
+import Forum from "./components/Forum/Forum";
 
 function App() {
   const { currentPage } = useNavigation();
@@ -33,6 +34,7 @@ function App() {
         {currentPage === "mystems" && <MyStems />}
         {currentPage === "profile" && <Profile />}
         {currentPage === "upload-pack" && <UploadPack />}
+        {currentPage === "forum" && <Forum />}
       </main>
     </div>
   );

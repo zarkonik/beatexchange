@@ -89,6 +89,15 @@ export default function Header() {
               My Stems
             </a>
           </li>
+          <li>
+            <a
+              href="#"
+              className={currentPage === "forum" ? "active" : ""}
+              onClick={(e) => navClick(e, "forum")}
+            >
+              Forum
+            </a>
+          </li>
           {isAdmin && (
             <li>
               <a

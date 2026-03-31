@@ -6,7 +6,7 @@ const STEPS = [
   {
     icon: "🔌",
     title: "Connect Wallet",
-    desc: "Connect your MetaMask or any Web3 wallet. No email or password needed — your wallet is your identity.",
+    desc: "Connect your MetaMask (Chrome extension) or any Web3 wallet. No email or password needed — your wallet is your identity.",
   },
   {
     icon: "🚰",
