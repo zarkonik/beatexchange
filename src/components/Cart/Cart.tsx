@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrowserProvider, Contract, formatEther, parseEther } from "ethers";
+import { BrowserProvider, Contract, formatEther } from "ethers";
 import { useWallet } from "../../context/WalletContext";
 import { useCart } from "../../context/CartContext";
 import { useNavigation } from "../../context/NavigationContext";
