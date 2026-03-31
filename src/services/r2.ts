@@ -27,6 +27,6 @@ export const uploadToR2 = async (
 
   await r2Client.send(command);
 
-  // return public URL
-  return `${import.meta.env.VITE_R2_ENDPOINT}/${BUCKET}/${fileName}`;
+  // ✅ use public URL instead of S3 endpoint
+  return `${import.meta.env.VITE_R2_PUBLIC_URL}/${fileName}`;
 };
