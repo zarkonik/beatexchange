@@ -10,6 +10,7 @@ import UsernameModal from "./components/UsernameModal/UsernameModal";
 import MyStems from "./components/MyStems/MyStems";
 import Profile from "./components/Profile/Profile";
 import UploadPack from "./components/UploadPack/UploadPack";
+import Landing from "./components/Landing/Landing";
 
 function App() {
   const { currentPage } = useNavigation();
@@ -22,6 +23,7 @@ function App() {
       <UsernameModal />
 
       <main>
+        {currentPage === "home" && <Landing />}
         {currentPage === "marketplace" && <Marketplace />}
         {currentPage === "upload" && <UploadStem />}
         {currentPage === "cart" && <Cart />}

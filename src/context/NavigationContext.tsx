@@ -15,7 +15,7 @@ const NavigationContext = createContext<NavigationContextType>({
 
 // ── 3. Provider ────────────────────────────
 export function NavigationProvider({ children }: { children: ReactNode }) {
-  const [currentPage, setCurrentPage] = useState("marketplace");
+  const [currentPage, setCurrentPage] = useState("home");
 
   const navigateTo = (page: string) => {
     setCurrentPage(page);

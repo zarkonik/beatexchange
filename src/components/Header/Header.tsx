@@ -28,7 +28,7 @@ export default function Header() {
 
   return (
     <header className="header">
-      <div className="header-logo" onClick={() => navigateTo("marketplace")}>
+      <div className="header-logo" onClick={() => navigateTo("home")}>
         <img src={logo} alt="BeatExchange" className="header-logo-img" />
       </div>
 
