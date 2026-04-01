@@ -29,3 +29,20 @@ export const uploadToPinata = async (file: File): Promise<string> => {
 export const ipfsToUrl = (cid: string): string => {
   return `${PINATA_GATEWAY}/ipfs/${cid}`;
 };
+// ── Unpin file from Pinata ─────────────────
+export const unpinFromPinata = async (ipfsHash: string): Promise<void> => {
+  const response = await fetch(
+    `https://api.pinata.cloud/pinning/unpin/${ipfsHash}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_PINATA_JWT}`,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Failed to unpin from Pinata");
+  }
+};

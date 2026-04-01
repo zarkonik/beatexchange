@@ -11,8 +11,28 @@ import {
 } from "../../services/firebaseServices";
 import type { Service, UserProfile } from "../../services/firebaseServices";
 import "./Admin.css";
+import {
+  getAllSamplePacksOnly,
+  getAllSoundbanks,
+  deletePack,
+  hideStem,
+  getHiddenStemIds,
+  unhideStem,
+} from "../../services/firebaseServices";
+import type { SamplePack, Soundbank } from "../../services/firebaseServices";
+import { deleteFromR2 } from "../../services/r2";
+import { BrowserProvider, Contract } from "ethers";
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../../config/contract";
+import { unpinFromPinata } from "../../services/pinata";
 
-type AdminTab = "overview" | "services" | "users" | "banned";
+type AdminTab =
+  | "overview"
+  | "services"
+  | "stems"
+  | "packs"
+  | "soundbanks"
+  | "users"
+  | "banned";
 
 export default function Admin() {
   const { isConnected, address } = useWallet();
@@ -25,6 +45,13 @@ export default function Admin() {
   const [banReasons, setBanReasons] = useState<Record<string, string>>({});
 
   const hasAccess = isConnected && isAdminWallet(address);
+
+  const { provider } = useWallet();
+
+  const [samplePacks, setSamplePacks] = useState<SamplePack[]>([]);
+  const [soundbanks, setSoundbanks] = useState<Soundbank[]>([]);
+  const [stems, setStems] = useState<any[]>([]);
+  const [hiddenIds, setHiddenIds] = useState<number[]>([]);
 
   useEffect(() => {
     if (hasAccess) loadData();
@@ -47,6 +74,46 @@ export default function Admin() {
       setLoading(false);
     }
   };
+
+  const loadStems = async () => {
+    try {
+      const p = provider || new BrowserProvider(window.ethereum);
+      const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, p);
+      const count = Number(await contract.stemCount());
+      const hidden = await getHiddenStemIds();
+      setHiddenIds(hidden);
+      const list = [];
+      for (let i = 0; i < count; i++) {
+        const stem = await contract.getStem(i);
+        list.push({
+          id: i,
+          title: stem.title,
+          producer: stem.producer,
+          ipfsHash: stem.ipfsHash,
+        });
+      }
+      setStems(list);
+    } catch (error) {
+      console.error("Failed to load stems:", error);
+    }
+  };
+
+  const loadPacks = async () => {
+    const [packs, banks] = await Promise.all([
+      getAllSamplePacksOnly(),
+      getAllSoundbanks(),
+    ]);
+    setSamplePacks(packs);
+    setSoundbanks(banks);
+  };
+
+  useEffect(() => {
+    if (isAdminWallet(address)) {
+      loadData();
+      loadStems(); // ✅ add
+      loadPacks(); // ✅ add
+    }
+  }, [address]);
 
   const handleDeleteService = async (id: string) => {
     if (!confirm("Delete this service permanently?")) return;
@@ -76,6 +143,47 @@ export default function Admin() {
       setBannedWallets((prev) => prev.filter((b) => b.id !== banId));
     } catch (error) {
       console.error("Unban failed:", error);
+    }
+  };
+
+  const handleHideStem = async (stem: {
+    id: number;
+    title: string;
+    ipfsHash: string;
+  }) => {
+    if (
+      !confirm(`Hide "${stem.title}" from marketplace and free Pinata storage?`)
+    )
+      return;
+    try {
+      await hideStem(stem.id);
+
+      // try to unpin — ignore error if already unpinned
+      try {
+        await unpinFromPinata(stem.ipfsHash);
+      } catch {
+        // file already deleted from Pinata — that's fine
+      }
+
+      await loadStems();
+    } catch (error: any) {
+      alert("Failed: " + error.message);
+    }
+  };
+
+  const handleUnhideStem = async (stemId: number) => {
+    await unhideStem(stemId);
+    await loadStems();
+  };
+
+  const handleDeletePack = async (pack: SamplePack | Soundbank) => {
+    if (!confirm(`Delete "${pack.title}"? This cannot be undone.`)) return;
+    try {
+      if (pack.fileUrl) await deleteFromR2(pack.fileUrl);
+      await deletePack(pack.id!);
+      await loadPacks();
+    } catch (error: any) {
+      alert("Delete failed: " + error.message);
     }
   };
 
@@ -118,17 +226,25 @@ export default function Admin() {
 
       {/* ── Tabs ────────────────────────────── */}
       <div className="admin-tabs">
-        {(["overview", "services", "users", "banned"] as AdminTab[]).map(
-          (tab) => (
-            <button
-              key={tab}
-              className={`admin-tab ${activeTab === tab ? "active" : ""}`}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab}
-            </button>
-          ),
-        )}
+        {(
+          [
+            "overview",
+            "services",
+            "stems",
+            "packs",
+            "soundbanks",
+            "users",
+            "banned",
+          ] as AdminTab[]
+        ).map((tab) => (
+          <button
+            key={tab}
+            className={`admin-tab ${activeTab === tab ? "active" : ""}`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab}
+          </button>
+        ))}
       </div>
 
       {loading ? (
@@ -210,6 +326,145 @@ export default function Admin() {
               </tbody>
             </table>
           )}
+
+          {/* ── Stems Tab ─────────────────────────── */}
+          {activeTab === "stems" &&
+            (stems.length === 0 ? (
+              <p className="loading-text">No stems found</p>
+            ) : (
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Producer</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stems.map((stem) => (
+                    <tr key={stem.id}>
+                      <td>{stem.id}</td>
+                      <td>{stem.title}</td>
+                      <td>{shortAddress(stem.producer)}</td>
+                      <td>
+                        {hiddenIds.includes(stem.id) ? (
+                          <span
+                            style={{
+                              color: "var(--error)",
+                              fontSize: "0.7rem",
+                              letterSpacing: "1px",
+                            }}
+                          >
+                            HIDDEN
+                          </span>
+                        ) : (
+                          <span
+                            style={{
+                              color: "var(--success)",
+                              fontSize: "0.7rem",
+                              letterSpacing: "1px",
+                            }}
+                          >
+                            VISIBLE
+                          </span>
+                        )}
+                      </td>
+                      <td>
+                        {hiddenIds.includes(stem.id) ? (
+                          <button
+                            className="btn-admin-unban"
+                            onClick={() => handleUnhideStem(stem.id)}
+                          >
+                            Unhide
+                          </button>
+                        ) : (
+                          <button
+                            className="btn-admin-delete"
+                            onClick={() => handleHideStem(stem)}
+                          >
+                            Hide
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ))}
+
+          {/* ── Sample Packs Tab ──────────────────── */}
+          {activeTab === "packs" &&
+            (samplePacks.length === 0 ? (
+              <p className="loading-text">No sample packs found</p>
+            ) : (
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Producer</th>
+                    <th>Price</th>
+                    <th>Size</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {samplePacks.map((pack) => (
+                    <tr key={pack.id}>
+                      <td>{pack.title}</td>
+                      <td>{shortAddress(pack.producer)}</td>
+                      <td>{pack.price} ETH</td>
+                      <td>{pack.fileSize}</td>
+                      <td>
+                        <button
+                          className="btn-admin-delete"
+                          onClick={() => handleDeletePack(pack)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ))}
+
+          {/* ── Soundbanks Tab ────────────────────── */}
+          {activeTab === "soundbanks" &&
+            (soundbanks.length === 0 ? (
+              <p className="loading-text">No soundbanks found</p>
+            ) : (
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Producer</th>
+                    <th>Instrument</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {soundbanks.map((bank) => (
+                    <tr key={bank.id}>
+                      <td>{bank.title}</td>
+                      <td>{shortAddress(bank.producer)}</td>
+                      <td>{bank.instrument}</td>
+                      <td>{bank.price} ETH</td>
+                      <td>
+                        <button
+                          className="btn-admin-delete"
+                          onClick={() => handleDeletePack(bank)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ))}
 
           {/* ── Users ─────────────────────────── */}
           {activeTab === "users" && (

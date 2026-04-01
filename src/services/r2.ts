@@ -1,4 +1,8 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 
 const r2Client = new S3Client({
   region: "auto",
@@ -29,4 +33,17 @@ export const uploadToR2 = async (
 
   // ✅ use public URL instead of S3 endpoint
   return `${import.meta.env.VITE_R2_PUBLIC_URL}/${fileName}`;
+};
+export const deleteFromR2 = async (fileUrl: string): Promise<void> => {
+  // extract key from URL
+  // URL looks like: https://pub-xxx.r2.dev/sample-packs/filename.rar
+  const publicUrl = import.meta.env.VITE_R2_PUBLIC_URL;
+  const key = fileUrl.replace(`${publicUrl}/`, "");
+
+  const command = new DeleteObjectCommand({
+    Bucket: import.meta.env.VITE_R2_BUCKET_NAME,
+    Key: key,
+  });
+
+  await r2Client.send(command);
 };

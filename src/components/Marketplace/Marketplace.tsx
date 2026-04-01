@@ -13,6 +13,7 @@ import {
 import type { SamplePack, Soundbank } from "../../services/firebaseServices";
 import AudioPlayer from "../AudioPlayer/AudioPlayer";
 import "./Marketplace.css";
+import { getHiddenStemIds } from "../../services/firebaseServices";
 
 type MarketTab = "stems" | "sample-packs" | "soundbanks";
 
@@ -85,11 +86,17 @@ export default function Marketplace() {
     }
   };
 
+  // update loadStems function
   const loadStems = async () => {
     const contract = await getContract();
     const count = Number(await contract.stemCount());
+    const hiddenIds = await getHiddenStemIds();
     const list: Stem[] = [];
+
     for (let i = 0; i < count; i++) {
+      // skip hidden stems
+      if (hiddenIds.includes(i)) continue;
+
       const stem = await contract.getStem(i);
       list.push({
         id: i,

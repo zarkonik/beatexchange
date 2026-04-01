@@ -597,3 +597,29 @@ export const getProfileByUsername = async (
     ...snapshot.docs[0].data(),
   } as unknown as UserProfile;
 };
+// ── Hidden stems collection ────────────────
+const HIDDEN_STEMS_COLLECTION = "hiddenStems";
+
+// ── Hide a stem from marketplace ───────────
+export const hideStem = async (stemId: number): Promise<void> => {
+  await setDoc(doc(db, HIDDEN_STEMS_COLLECTION, String(stemId)), {
+    stemId,
+    hiddenAt: serverTimestamp(),
+  });
+};
+
+// ── Unhide a stem ──────────────────────────
+export const unhideStem = async (stemId: number): Promise<void> => {
+  await deleteDoc(doc(db, HIDDEN_STEMS_COLLECTION, String(stemId)));
+};
+
+// ── Get all hidden stem IDs ────────────────
+export const getHiddenStemIds = async (): Promise<number[]> => {
+  const snapshot = await getDocs(collection(db, HIDDEN_STEMS_COLLECTION));
+  return snapshot.docs.map((doc) => Number(doc.id));
+};
+
+// ── Delete sample pack from Firestore ──────
+export const deletePack = async (packId: string): Promise<void> => {
+  await deleteDoc(doc(db, PACKS_COLLECTION, packId));
+};
