@@ -292,7 +292,7 @@
 /* ── How It Works ─────────────────────────── */
 .how-it-works {
   padding: 6rem 2rem;
-  max-width: 1100px;
+
   margin: 0 auto;
   width: 100%;
 }
@@ -316,10 +316,11 @@
 }
 
 .steps {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr); /* ✅ always 5 columns */
   gap: 1rem; /* ✅ smaller gap to fit */
   position: relative;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: nowrap;
 }
 
 /* ── Connector line between steps ─────────── */
@@ -351,6 +352,8 @@
   position: relative;
   transition: all 0.3s ease;
   cursor: default;
+  width: calc(100% / 5);
+  height: fit-content;
 }
 
 .step-card:hover {

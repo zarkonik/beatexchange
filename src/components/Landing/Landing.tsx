@@ -6,12 +6,16 @@ const STEPS = [
   {
     icon: "🔌",
     title: "Connect Wallet",
-    desc: "Connect your MetaMask (Chrome extension) or any Web3 wallet. No email or password needed — your wallet is your identity.",
+    desc:
+      "Connect your MetaMask (Google Chrome extension) or any Web3 wallet. No email or password needed — your wallet is your identity. You need to setup a wallet to be able to access all features of the website. Go to Connect wallet button at the top right corner and choose MetaMask." +
+      "Once installed, refresh the website so it can recognise installed Metamask.",
   },
   {
     icon: "🚰",
-    title: "Get Free Test ETH",
-    desc: "Need ETH to get started? Get free Sepolia test ETH with your Google account on the official Google Faucet.",
+    title: "Get Free Test Ethereum crypto currency",
+    desc:
+      "Need ETH to get started? Get free Sepolia test ETH with your Google account on the official Google Faucet. Just go to the link below and and choose Sepolia Network" +
+      " if not already chosen. Copy your MetaMask account address and you will get 0.05ETH that you can use for transactions.",
     url: "https://cloud.google.com/application/web3/faucet/ethereum/sepolia",
   },
   {
