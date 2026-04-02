@@ -1,69 +1,160 @@
 import { useState } from "react";
 import { useUser } from "../../context/UserContext";
+import type { UserRole } from "../../services/firebaseServices";
 import "./UsernameModal.css";
 
-export default function UsernameModal() {
-  const { showUsernameModal, saveUsername } = useUser();
+const ROLES: { value: UserRole; icon: string; title: string; desc: string }[] =
+  [
+    {
+      value: "buyer",
+      icon: "🎧",
+      title: "Buyer",
+      desc: "Browse and purchase stems, sample packs and soundbanks",
+    },
+    {
+      value: "producer",
+      icon: "🎛️",
+      title: "Producer",
+      desc: "Upload and sell beats, stems, sample packs and soundbanks",
+    },
+    {
+      value: "service_provider",
+      icon: "🎤",
+      title: "Service Provider",
+      desc: "Offer mixing, mastering, vocal recording and other services",
+    },
+  ];
 
+export default function UsernameModal() {
+  const { saveUsername, updateRole, profile } = useUser();
+
+  // if user already has username — start on role step directly
+  const [step, setStep] = useState<"role" | "username">(
+    profile?.username ? "role" : "role",
+  );
+  const [role, setRole] = useState<UserRole | null>(null);
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  if (!showUsernameModal) return null;
+  const handleRoleSelect = async (r: UserRole) => {
+    setRole(r);
+    console.log("Role selected:", r);
+    console.log("Profile:", profile);
 
-  const handleSubmit = async () => {
+    if (profile?.username) {
+      setLoading(true);
+      try {
+        console.log("Updating role for existing user...");
+        await updateRole(r);
+        console.log("Role updated successfully!");
+      } catch (error: any) {
+        console.error("Error updating role:", error);
+        setError(error?.message || "Failed to save role");
+        setLoading(false);
+      }
+      return;
+    }
+
+    setStep("username");
+  };
+
+  const handleSave = async () => {
     if (!username.trim()) {
-      setError("Please enter a username");
+      setError("Username is required");
+      return;
+    }
+    if (!role) {
+      setError("Please select a role");
       return;
     }
 
     setLoading(true);
     setError("");
 
-    const errorMsg = await saveUsername(username.trim());
-    if (errorMsg) {
-      setError(errorMsg);
+    const err = await saveUsername(username.trim(), role);
+    if (err) {
+      setError(err);
       setLoading(false);
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") handleSubmit();
-  };
-
   return (
     <div className="modal-overlay">
-      <div className="modal-box">
-        <div className="modal-header">
-          <h2>👋 Welcome!</h2>
-          <p>
-            You're connecting for the first time. Choose a username so others
-            can recognize you on BeatExchange.
-          </p>
-        </div>
+      <div className="username-modal">
+        {/* ── Step 1 — Role Selection ──────── */}
+        {step === "role" && (
+          <>
+            <h2 className="modal-title">
+              {profile?.username
+                ? "Choose Your Role"
+                : "Welcome to BeatExchange"}
+            </h2>
+            <p className="modal-subtitle">
+              {profile?.username
+                ? "We need to know your role to personalize your experience"
+                : "Choose your role to get started"}
+            </p>
 
-        <div className="modal-input-group">
-          <label>Username</label>
-          <input
-            className="modal-input"
-            type="text"
-            placeholder="e.g. DJZarko"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            onKeyDown={handleKeyDown}
-            maxLength={20}
-            autoFocus
-          />
-          <span className="modal-hint">
-            Letters and numbers only — max 20 characters
-          </span>
-        </div>
+            <div className="role-grid">
+              {ROLES.map((r) => (
+                <button
+                  key={r.value}
+                  className="role-card"
+                  onClick={() => handleRoleSelect(r.value)}
+                >
+                  <span className="role-icon">{r.icon}</span>
+                  <span className="role-title">{r.title}</span>
+                  <span className="role-desc">{r.desc}</span>
+                </button>
+              ))}
+            </div>
+          </>
+        )}
 
-        {error && <div className="modal-error">{error}</div>}
+        {/* ── Step 2 — Username ────────────── */}
+        {step === "username" && (
+          <>
+            <button className="modal-back" onClick={() => setStep("role")}>
+              ← Back
+            </button>
 
-        <button className="modal-btn" onClick={handleSubmit} disabled={loading}>
-          {loading ? "Saving..." : "Set Username →"}
-        </button>
+            <div className="role-selected">
+              {ROLES.find((r) => r.value === role)?.icon}{" "}
+              {ROLES.find((r) => r.value === role)?.title}
+            </div>
+
+            <h2 className="modal-title">Choose Your Username</h2>
+            <p className="modal-subtitle">
+              This will be your public identity on Beat Exchange
+            </p>
+
+            <input
+              type="text"
+              className="modal-input"
+              placeholder="Enter username..."
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              maxLength={20}
+              autoFocus
+              onKeyDown={(e) => e.key === "Enter" && handleSave()}
+            />
+
+            {error && <p className="modal-error">{error}</p>}
+
+            <button
+              className="modal-btn"
+              onClick={handleSave}
+              disabled={loading}
+            >
+              {loading ? "Saving..." : "Get Started →"}
+            </button>
+
+            <p className="modal-hint">
+              Letters and numbers only — max 20 characters
+            </p>
+          </>
+        )}
       </div>
     </div>
   );

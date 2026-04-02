@@ -7,6 +7,7 @@ import type {
   PricingType,
 } from "../../services/firebaseServices";
 import "./PostService.css";
+import { useUser } from "../../context/UserContext";
 
 const CATEGORIES: ServiceCategory[] = [
   "Mixing & Mastering",
@@ -34,6 +35,7 @@ export default function PostService() {
   >("idle");
   const [message, setMessage] = useState("");
   const [isBanned, setIsBanned] = useState(false);
+  const { profile } = useUser();
 
   // ── Check ban status ───────────────────────
   useEffect(() => {
@@ -130,6 +132,19 @@ export default function PostService() {
           style={{ borderColor: "var(--error)", color: "var(--error)" }}
         >
           ⛔ Your wallet has been banned from posting services.
+        </div>
+      </div>
+    );
+  }
+
+  if (profile?.role !== "service_provider" && profile?.role !== "producer") {
+    return (
+      <div className="post-service-page">
+        <div
+          className="wallet-warning"
+          style={{ borderColor: "var(--error)", color: "var(--error)" }}
+        >
+          ⛔ Only Producers and Service Providers can post services
         </div>
       </div>
     );

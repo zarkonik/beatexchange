@@ -12,16 +12,16 @@ import Profile from "./components/Profile/Profile";
 import UploadPack from "./components/UploadPack/UploadPack";
 import Landing from "./components/Landing/Landing";
 import Forum from "./components/Forum/Forum";
+import { useUser } from "./context/UserContext";
 
 function App() {
   const { currentPage } = useNavigation();
-
+  const { showUsernameModal } = useUser();
   return (
     <div>
       <Header />
 
-      {/* Shows automatically on first wallet connect */}
-      <UsernameModal />
+      {showUsernameModal && <UsernameModal />}
 
       <main>
         {currentPage === "home" && <Landing />}

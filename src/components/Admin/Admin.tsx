@@ -24,6 +24,8 @@ import { deleteFromR2 } from "../../services/r2";
 import { BrowserProvider, Contract } from "ethers";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../../config/contract";
 import { unpinFromPinata } from "../../services/pinata";
+import { updateUserRole } from "../../services/firebaseServices";
+import type { UserRole } from "../../services/firebaseServices";
 
 type AdminTab =
   | "overview"
@@ -96,6 +98,11 @@ export default function Admin() {
     } catch (error) {
       console.error("Failed to load stems:", error);
     }
+  };
+
+  const handleRoleChange = async (walletAddress: string, role: UserRole) => {
+    await updateUserRole(walletAddress, role);
+    await loadData();
   };
 
   const loadPacks = async () => {
@@ -235,6 +242,7 @@ export default function Admin() {
             "soundbanks",
             "users",
             "banned",
+            "roles",
           ] as AdminTab[]
         ).map((tab) => (
           <button
@@ -473,7 +481,7 @@ export default function Admin() {
                 <tr>
                   <th>Username</th>
                   <th>Wallet</th>
-                  <th>Services Posted</th>
+                  <th>Role</th>
                   <th>Status</th>
                   <th>Ban Reason</th>
                   <th>Actions</th>
@@ -491,13 +499,32 @@ export default function Admin() {
                       {shortAddress(user.walletAddress)}
                     </td>
                     <td>
-                      {
-                        services.filter(
-                          (s) =>
-                            s.walletAddress.toLowerCase() ===
-                            user.walletAddress.toLowerCase(),
-                        ).length
-                      }
+                      <select
+                        value={user.role || "buyer"}
+                        onChange={(e) =>
+                          handleRoleChange(
+                            user.walletAddress,
+                            e.target.value as UserRole,
+                          )
+                        }
+                        style={{
+                          background: "var(--bg)",
+                          border: "1px solid var(--border)",
+                          borderRadius: "var(--radius)",
+                          color: "var(--text)",
+                          fontFamily: "Courier New, monospace",
+                          fontSize: "0.65rem",
+                          padding: "0.3rem 0.5rem",
+                          letterSpacing: "1px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <option value="buyer">Buyer</option>
+                        <option value="producer">Producer</option>
+                        <option value="service_provider">
+                          Service Provider
+                        </option>
+                      </select>
                     </td>
                     <td>
                       {isBanned(user.walletAddress) ? (

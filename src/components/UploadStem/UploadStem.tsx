@@ -5,6 +5,7 @@ import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../../config/contract";
 import { uploadToPinata } from "../../services/pinata";
 import { isWalletBanned } from "../../services/firebaseServices";
 import "./UploadStem.css";
+import { useUser } from "../../context/UserContext";
 
 export default function UploadStem() {
   const { isConnected, address, provider } = useWallet();
@@ -19,6 +20,7 @@ export default function UploadStem() {
   >("idle");
   const [message, setMessage] = useState("");
   const [isBanned, setIsBanned] = useState(false);
+  const { profile } = useUser();
 
   // ── Check ban status ───────────────────────
   useEffect(() => {
@@ -146,6 +148,18 @@ export default function UploadStem() {
           style={{ borderColor: "var(--error)", color: "var(--error)" }}
         >
           ⛔ Your wallet has been banned from uploading stems.
+        </div>
+      </div>
+    );
+  }
+  if (profile?.role !== "producer") {
+    return (
+      <div className="upload-page">
+        <div
+          className="wallet-warning"
+          style={{ borderColor: "var(--error)", color: "var(--error)" }}
+        >
+          ⛔ Only Producers can upload stems
         </div>
       </div>
     );

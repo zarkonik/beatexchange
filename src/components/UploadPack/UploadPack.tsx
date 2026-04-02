@@ -1,17 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useWallet } from "../../context/WalletContext";
 import { useNavigation } from "../../context/NavigationContext";
 import { uploadToR2 } from "../../services/r2";
 import { uploadToPinata, ipfsToUrl } from "../../services/pinata";
-import { createSamplePack } from "../../services/firebaseServices";
+import {
+  createSamplePack,
+  isWalletBanned,
+} from "../../services/firebaseServices";
 import type { SamplePack, Soundbank } from "../../services/firebaseServices";
 import "./UploadPack.css";
+import { useUser } from "../../context/UserContext";
 
 type PackType = "Sample Pack" | "Soundbank";
 
 export default function UploadPack() {
   const { isConnected, address } = useWallet();
   const { navigateTo } = useNavigation();
+  const { profile } = useUser();
+  const [isBanned, setIsBanned] = useState(false);
 
   // ── Pack type ──────────────────────────────
   const [packType, setPackType] = useState<PackType>("Sample Pack");
@@ -63,6 +69,16 @@ export default function UploadPack() {
     setStatus("idle");
     setMessage("");
   };
+
+  useEffect(() => {
+    const checkBan = async () => {
+      if (isConnected && address) {
+        const banned = await isWalletBanned(address);
+        setIsBanned(banned);
+      }
+    };
+    checkBan();
+  }, [isConnected, address]);
 
   const handlePreviewChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -218,7 +234,31 @@ export default function UploadPack() {
       </div>
     );
   }
+  if (isBanned) {
+    return (
+      <div className="upload-pack-page">
+        <div
+          className="wallet-warning"
+          style={{ borderColor: "var(--error)", color: "var(--error)" }}
+        >
+          ⛔ Your wallet has been banned from uploading packs.
+        </div>
+      </div>
+    );
+  }
 
+  if (profile?.role !== "producer") {
+    return (
+      <div className="upload-pack-page">
+        <div
+          className="wallet-warning"
+          style={{ borderColor: "var(--error)", color: "var(--error)" }}
+        >
+          ⛔ Only Producers can upload packs
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="upload-pack-page">
       <h1>Upload Pack</h1>
@@ -266,7 +306,7 @@ export default function UploadPack() {
         <div className="form-group">
           <label>Description</label>
           <textarea
-            placeholder="Describe what's included in this pack..."
+            placeholder="Describe what's included in th  pack..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             maxLength={1000}

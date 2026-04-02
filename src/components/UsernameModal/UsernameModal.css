@@ -150,3 +150,87 @@
     font-size: 16px;
   }
 }
+
+/* ── Role Grid ────────────────────────────── */
+.role-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.role-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.2rem 1.5rem;
+  text-align: left;
+  transition: all 0.2s;
+  font-family: "Courier New", monospace;
+  width: 100%;
+}
+
+.role-card:hover {
+  border-color: var(--accent);
+  background: rgba(240, 180, 41, 0.05);
+  transform: translateX(4px);
+}
+
+.role-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.role-title {
+  font-size: 0.9rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.role-desc {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  line-height: 1.5;
+}
+
+/* ── Role Selected Badge ──────────────────── */
+.role-selected {
+  background: rgba(240, 180, 41, 0.1);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  padding: 0.4rem 1rem;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  align-self: flex-start;
+}
+
+/* ── Back Button ──────────────────────────── */
+.modal-back {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: "Courier New", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  padding: 0;
+  margin-bottom: 1rem;
+  transition: color 0.2s;
+  align-self: flex-start;
+}
+
+.modal-back:hover {
+  color: var(--accent);
+}

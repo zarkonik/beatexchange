@@ -25,6 +25,7 @@ export default function Header() {
     navigateTo(page);
     setMenuOpen(false);
   };
+  const role = profile?.role;
 
   return (
     <header className="header">
@@ -53,24 +54,32 @@ export default function Header() {
             </a>
           </li>
 
-          <li>
-            <a
-              href="#"
-              className={currentPage === "upload" ? "active" : ""}
-              onClick={(e) => navClick(e, "upload")}
-            >
-              Upload Stem
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className={currentPage === "upload-pack" ? "active" : ""}
-              onClick={(e) => navClick(e, "upload-pack")}
-            >
-              Upload Pack
-            </a>
-          </li>
+          {/* Producer only */}
+          {role === "producer" && (
+            <li>
+              <a
+                href="#"
+                className={currentPage === "upload" ? "active" : ""}
+                onClick={(e) => navClick(e, "upload")}
+              >
+                Upload Stem
+              </a>
+            </li>
+          )}
+
+          {/* Producer only */}
+          {role === "producer" && (
+            <li>
+              <a
+                href="#"
+                className={currentPage === "upload-pack" ? "active" : ""}
+                onClick={(e) => navClick(e, "upload-pack")}
+              >
+                Upload Pack
+              </a>
+            </li>
+          )}
+          {/* All roles can see services */}
           <li>
             <a
               href="#"
@@ -80,6 +89,8 @@ export default function Header() {
               Services
             </a>
           </li>
+
+          {/* All roles can see My Stems */}
           <li>
             <a
               href="#"
@@ -89,6 +100,7 @@ export default function Header() {
               My Stems
             </a>
           </li>
+
           <li>
             <a
               href="#"

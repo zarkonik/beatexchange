@@ -22,6 +22,7 @@ export type ServiceCategory =
   | "Sound Design"
   | "Vocal Recording"
   | "DJ Sets & Remixes";
+export type UserRole = "buyer" | "producer" | "service_provider";
 
 export type PricingType = "fixed" | "hourly" | "both";
 
@@ -96,6 +97,7 @@ export interface Service {
 export interface UserProfile {
   walletAddress: string;
   username: string;
+  role: UserRole;
   avatarUrl: string;
   hasAvatar?: boolean;
   createdAt?: any;
@@ -201,6 +203,7 @@ export const getAllServicesAdmin = async (): Promise<Service[]> => {
 export const saveUserProfile = async (
   walletAddress: string,
   username: string,
+  role: UserRole,
 ): Promise<void> => {
   const userRef = doc(db, USERS_COLLECTION, walletAddress.toLowerCase());
   const docSnap = await getDoc(userRef);
@@ -214,6 +217,7 @@ export const saveUserProfile = async (
     await setDoc(userRef, {
       walletAddress: walletAddress.toLowerCase(),
       username,
+      role,
       avatarUrl: "",
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
@@ -622,4 +626,15 @@ export const getHiddenStemIds = async (): Promise<number[]> => {
 // ── Delete sample pack from Firestore ──────
 export const deletePack = async (packId: string): Promise<void> => {
   await deleteDoc(doc(db, PACKS_COLLECTION, packId));
+};
+
+export const updateUserRole = async (
+  walletAddress: string,
+  role: UserRole,
+): Promise<void> => {
+  const userRef = doc(db, USERS_COLLECTION, walletAddress.toLowerCase());
+  await updateDoc(userRef, {
+    role,
+    updatedAt: serverTimestamp(),
+  });
 };
