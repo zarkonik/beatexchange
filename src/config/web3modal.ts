@@ -12,13 +12,18 @@ const sepolia = {
 
 const metadata = {
   name: "BeatExchange",
-  description: "Buy and sell music stems on the blockchain",
-  url: "https://beatexchange.vercel.app",
-  icons: ["https://beatexchange.vercel.app/favicon.ico"],
+  description: "Web3 Music Marketplace",
+  url: "https://beatexchange.pages.dev", // ← your Cloudflare URL
+  icons: ["https://beatexchange.pages.dev/favicon.ico"],
 };
 
 export const modal = createWeb3Modal({
-  ethersConfig: defaultConfig({ metadata }),
+  ethersConfig: defaultConfig({
+    metadata,
+    enableEIP6963: true,
+    enableInjected: true,
+    enableCoinbase: false, // ← disabled since not available
+  }),
   chains: [sepolia],
   projectId,
   themeMode: "dark",
@@ -26,4 +31,8 @@ export const modal = createWeb3Modal({
     "--w3m-accent": "#f0b429",
     "--w3m-border-radius-master": "4px",
   },
+  featuredWalletIds: [
+    "4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0", // Trust Wallet
+    "c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96", // MetaMask
+  ],
 });
