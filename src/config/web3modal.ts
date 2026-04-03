@@ -13,8 +13,8 @@ const sepolia = {
 const metadata = {
   name: "BeatExchange",
   description: "Web3 Music Marketplace",
-  url: "https://beatexchange.pages.dev", // ← your Cloudflare URL
-  icons: ["https://beatexchange.pages.dev/favicon.ico"],
+  url: window.location.origin, // ✅ automatically uses current URL
+  icons: [`${window.location.origin}/favicon.ico`],
 };
 
 export const modal = createWeb3Modal({
