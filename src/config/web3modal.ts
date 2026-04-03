@@ -1,31 +1,48 @@
-import { createWeb3Modal, defaultConfig } from "@web3modal/ethers";
+import { createAppKit } from "@reown/appkit";
+import { EthersAdapter } from "@reown/appkit-adapter-ethers";
+import { defineChain } from "@reown/appkit/networks";
 
 const projectId = import.meta.env.VITE_WALLETCONNECT_ID;
 
-const sepolia = {
-  chainId: 11155111,
+// ── Define Sepolia ─────────────────────────
+export const sepolia = defineChain({
+  id: 11155111,
+  caipNetworkId: "eip155:11155111",
+  chainNamespace: "eip155",
   name: "Sepolia",
-  currency: "ETH",
-  explorerUrl: "https://sepolia.etherscan.io",
-  rpcUrl: `https://eth-sepolia.g.alchemy.com/v2/${import.meta.env.VITE_ALCHEMY_KEY}`,
-};
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ethereum",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: {
+      http: [
+        `https://eth-sepolia.g.alchemy.com/v2/${import.meta.env.VITE_ALCHEMY_KEY}`,
+      ],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "Etherscan",
+      url: "https://sepolia.etherscan.io",
+    },
+  },
+  testnet: true,
+});
 
 const metadata = {
   name: "BeatExchange",
   description: "Web3 Music Marketplace",
-  url: window.location.origin, // ✅ automatically uses current URL
+  url: window.location.origin,
   icons: [`${window.location.origin}/favicon.ico`],
 };
 
-export const modal = createWeb3Modal({
-  ethersConfig: defaultConfig({
-    metadata,
-    enableEIP6963: true,
-    enableInjected: true,
-    enableCoinbase: false, // ← disabled since not available
-  }),
-  chains: [sepolia],
+export const modal = createAppKit({
+  adapters: [new EthersAdapter()],
+  networks: [sepolia],
   projectId,
+  metadata,
   themeMode: "dark",
   themeVariables: {
     "--w3m-accent": "#f0b429",

@@ -25,34 +25,34 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [provider, setProvider] = useState<BrowserProvider | null>(null);
 
   useEffect(() => {
-    modal.subscribeProvider(async (newProvider) => {
-      if (newProvider.provider && newProvider.address) {
-        const ethersProvider = new BrowserProvider(newProvider.provider);
-        setProvider(ethersProvider);
-        setAddress(newProvider.address);
+    // ✅ subscribe to account changes
+    const unsubscribe = modal.subscribeAccount((account) => {
+      if (account?.address && account?.isConnected) {
+        setAddress(account.address);
         setIsConnected(true);
+
+        // ✅ get wallet provider
+        const walletProvider = modal.getWalletProvider();
+        if (walletProvider) {
+          const ethersProvider = new BrowserProvider(walletProvider as any);
+          setProvider(ethersProvider);
+        }
       } else {
-        setProvider(null);
         setAddress("");
         setIsConnected(false);
+        setProvider(null);
       }
     });
+
+    return () => unsubscribe();
   }, []);
 
   const connectWallet = async () => {
     await modal.open();
   };
 
-  // ✅ correct for v5.1.11
   const disconnectWallet = async () => {
-    try {
-      await modal.open({ view: "Account" });
-    } catch (error) {
-      // fallback — just clear state
-      setAddress("");
-      setIsConnected(false);
-      setProvider(null);
-    }
+    await modal.open({ view: "Account" });
   };
 
   return (
