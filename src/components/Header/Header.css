@@ -221,10 +221,12 @@
     top: 0;
   }
 
-  /* ✅ logo smaller on mobile */
   .header-logo-img {
-    width: 2rem;
-    height: 2rem;
+    width: 4.5rem;
+    height: 4.5rem;
+    position: relative;
+    z-index: 101;
+    margin: -0.5rem 0; /* ← allows it to overlap header slightly */
   }
 
   /* ✅ show hamburger */
@@ -293,8 +295,11 @@
   }
 
   .header-logo-img {
-    width: 1.8rem;
-    height: 1.8rem;
+    width: 4rem;
+    height: 4rem;
+    position: relative;
+    z-index: 101;
+    margin: -0.5rem 0;
   }
 
   .btn-connect,
