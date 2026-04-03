@@ -10,21 +10,29 @@
   top: 0;
   z-index: 100;
   gap: 1rem;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
 }
 
 /* ── Logo ─────────────────────────────────── */
 .header-logo {
-  font-size: 1.2rem;
-  font-weight: bold;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--accent);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
   flex-shrink: 0;
+  text-decoration: none;
 }
 
-.header-logo span {
-  color: var(--text);
+.header-logo-img {
+  width: 3rem;
+  height: 3rem;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+}
+
+.logo-beat {
+  color: var(--accent);
 }
 
 /* ── Nav ──────────────────────────────────── */
@@ -33,6 +41,7 @@
   gap: 1.2rem;
   list-style: none;
   flex-shrink: 1;
+  flex-wrap: nowrap;
 }
 
 .header-nav a {
@@ -48,7 +57,6 @@
 .header-nav a:hover {
   color: var(--accent);
 }
-
 .header-nav a.active {
   color: var(--text);
 }
@@ -187,7 +195,7 @@
 
 .hamburger span {
   display: block;
-  width: 1.2rem;
+  width: 1.4rem;
   height: 2px;
   background: var(--text);
   transition: all 0.3s;
@@ -205,30 +213,35 @@
   transform: translateY(-7px) rotate(-45deg);
 }
 
-/* ── Tablet ───────────────────────────────── */
+/* ── Mobile ───────────────────────────────── */
 @media (max-width: 768px) {
   .header {
-    padding: 0.8rem 1.2rem;
-    flex-wrap: wrap;
-    gap: 0.8rem;
-    position: relative;
+    padding: 0.7rem 1rem;
+    position: sticky;
+    top: 0;
   }
 
-  .header-logo {
-    font-size: 1rem;
+  /* ✅ logo smaller on mobile */
+  .header-logo-img {
+    width: 2rem;
+    height: 2rem;
   }
 
+  /* ✅ show hamburger */
   .hamburger {
     display: flex;
+    margin-left: auto;
   }
 
+  /* ✅ hide nav by default */
   .header-nav {
     display: none;
     width: 100%;
     flex-direction: column;
     gap: 0;
     border-top: 1px solid var(--border);
-    padding-top: 1rem;
+    margin-top: 0.5rem;
+    order: 3; /* ← pushes nav below logo + hamburger */
   }
 
   .header-nav.open {
@@ -241,86 +254,52 @@
 
   .header-nav a {
     display: block;
-    padding: 0.8rem 0;
-    font-size: 0.75rem;
+    padding: 0.9rem 0.5rem;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
   }
 
+  /* ✅ hide wallet by default */
   .header-wallet {
     display: none;
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding: 0.8rem 0.5rem;
+    border-top: 1px solid var(--border);
+    order: 4; /* ← pushes wallet below nav */
   }
 
   .header-wallet.open {
     display: flex;
-    width: 100%;
-    justify-content: flex-end;
-    border-top: 1px solid var(--border);
-    padding-top: 1rem;
-  }
-}
-
-/* ── Mobile ───────────────────────────────── */
-@media (max-width: 480px) {
-  .header {
-    padding: 0.7rem 0.8rem;
-  }
-
-  .header-logo {
-    font-size: 0.9rem;
-    letter-spacing: 2px;
   }
 
   .btn-connect,
   .btn-disconnect {
-    font-size: 0.6rem;
-    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+    padding: 0.6rem 1rem;
   }
 
   .wallet-address {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
   }
 }
-/* ── Header ───────────────────────────────── */
-.header {
-  border-bottom: 1px solid var(--border);
-  padding: 0.5rem 1.5rem; /* ✅ less padding to keep height small */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--surface);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  gap: 1rem;
-  flex-wrap: nowrap;
-  height: 4rem; /* ✅ fixed height */
-}
 
-/* ── Logo ─────────────────────────────────── */
-.header-logo {
-  display: flex;
-  flex-direction: row; /* ✅ back to row — logo left, text right */
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 1rem;
-  font-weight: bold;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--text);
-  cursor: pointer;
-  flex-shrink: 0;
-  text-decoration: none;
-}
+/* ── Small Mobile ─────────────────────────── */
+@media (max-width: 480px) {
+  .header {
+    padding: 0.6rem 0.8rem;
+  }
 
-.header-logo-img {
-  position: relative;
-  top: 1.5rem;
-  left: 2rem;
-  width: 9rem; /* ✅ bigger */
-  height: 6.8rem;
-  object-fit: cover;
-  border-radius: 50%; /* ✅ circle */
-}
+  .header-logo-img {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
 
-.logo-beat {
-  color: var(--accent);
+  .btn-connect,
+  .btn-disconnect {
+    font-size: 0.7rem;
+    padding: 0.5rem 0.8rem;
+  }
 }

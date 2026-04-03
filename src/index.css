@@ -79,3 +79,7 @@ a {
   font-size: 19px;
   letter-spacing: 1px;
 }
+/* ── Web3Modal mobile fix ─────────────────── */
+w3m-modal {
+  z-index: 9999 !important;
+}
