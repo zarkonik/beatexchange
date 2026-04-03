@@ -11,6 +11,7 @@
   z-index: 100;
   gap: 1rem;
   flex-wrap: wrap;
+  min-height: 5rem; /* ✅ taller header on desktop */
 }
 
 /* ── Logo ─────────────────────────────────── */
@@ -24,11 +25,19 @@
 }
 
 .header-logo-img {
-  width: 3rem;
-  height: 3rem;
+  width: 6rem; /* ✅ bigger on desktop */
+  height: 6rem;
   object-fit: cover;
   border-radius: 50%;
-  border: 1px solid var(--accent);
+  border: 2px solid var(--accent);
+  position: relative;
+  z-index: 101;
+  margin: -1rem 0; /* ✅ overlaps header top and bottom */
+  box-shadow: 0 0 20px rgba(240, 180, 41, 0.3);
+  transition: box-shadow 0.2s;
+}
+.header-logo-img:hover {
+  box-shadow: 0 0 30px rgba(240, 180, 41, 0.5);
 }
 
 .logo-beat {
