@@ -97,6 +97,7 @@
   align-items: center;
   gap: 1.5rem;
   max-width: 800px;
+  width: 100%;
 }
 
 .hero-badge {
@@ -187,6 +188,7 @@
   flex-wrap: wrap;
   justify-content: center;
   animation: fadeInUp 0.6s ease 0.3s both;
+  width: 100%;
 }
 
 .btn-hero-primary {
@@ -292,7 +294,6 @@
 /* ── How It Works ─────────────────────────── */
 .how-it-works {
   padding: 6rem 2rem;
-
   margin: 0 auto;
   width: 100%;
 }
@@ -315,15 +316,14 @@
   margin-bottom: 4rem;
 }
 
+/* ── Steps ────────────────────────────────── */
 .steps {
-  gap: 1rem; /* ✅ smaller gap to fit */
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* ← 5 columns on desktop */
+  gap: 1rem;
   position: relative;
-  display: flex;
-  justify-content: space-evenly;
-  flex-wrap: nowrap;
 }
 
-/* ── Connector line between steps ─────────── */
 .steps::before {
   content: "";
   position: absolute;
@@ -345,15 +345,13 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1.5rem 1rem; /* ✅ less padding */
+  padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
   position: relative;
   transition: all 0.3s ease;
   cursor: default;
-  width: calc(100% / 5);
-  height: fit-content;
 }
 
 .step-card:hover {
@@ -363,7 +361,7 @@
 }
 
 .step-number {
-  font-size: 2rem; /* ✅ slightly smaller */
+  font-size: 2rem;
   font-weight: bold;
   color: rgba(240, 180, 41, 0.15);
   letter-spacing: 2px;
@@ -379,7 +377,7 @@
 }
 
 .step-title {
-  font-size: 0.8rem; /* ✅ slightly smaller */
+  font-size: 0.8rem;
   font-weight: bold;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -387,7 +385,7 @@
 }
 
 .step-desc {
-  font-size: 0.72rem; /* ✅ slightly smaller */
+  font-size: 0.72rem;
   color: var(--text-muted);
   line-height: 1.7;
   letter-spacing: 0.5px;
@@ -471,22 +469,164 @@
   }
 }
 
+/* ── Tablet 1024px ────────────────────────── */
 @media (max-width: 1024px) {
+  .hero-title {
+    font-size: 3rem;
+    letter-spacing: 3px;
+  }
+
   .steps {
     grid-template-columns: repeat(3, 1fr);
   }
-}
 
-@media (max-width: 768px) {
-  .steps {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 100%;
-    margin: 0;
+  .steps::before {
+    display: none;
+  }
+
+  .cta-title {
+    font-size: 2rem;
   }
 }
 
+/* ── Tablet 768px ─────────────────────────── */
+@media (max-width: 768px) {
+  .hero {
+    padding: 5rem 1.5rem 3rem;
+    min-height: 80vh;
+  }
+
+  .hero-title {
+    font-size: 2.2rem;
+    letter-spacing: 2px;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .hero-glow-1 {
+    width: 300px;
+    height: 300px;
+  }
+
+  .hero-glow-2 {
+    width: 250px;
+    height: 250px;
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .how-it-works {
+    padding: 4rem 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .cta-title {
+    font-size: 1.8rem;
+  }
+
+  .landing-cta {
+    padding: 4rem 1.5rem;
+  }
+}
+
+/* ── Mobile 480px ─────────────────────────── */
 @media (max-width: 480px) {
+  .hero {
+    padding: 4rem 1rem 3rem;
+    min-height: 100vh;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+  }
+
+  .hero-badge {
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    padding: 0.3rem 0.8rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .btn-hero-primary,
+  .btn-hero-secondary {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    font-size: 0.75rem;
+  }
+
+  .scroll-indicator {
+    display: none; /* ← hide on very small screens */
+  }
+
   .steps {
     grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .step-card {
+    padding: 1.2rem 1rem;
+  }
+
+  .step-number {
+    font-size: 1.5rem;
+  }
+
+  .step-icon {
+    font-size: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem;
+  }
+
+  .how-it-works {
+    padding: 3rem 1rem;
+  }
+
+  .cta-title {
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+  }
+
+  .cta-subtitle {
+    font-size: 0.8rem;
+  }
+
+  .landing-cta {
+    padding: 3rem 1rem;
+    gap: 1.2rem;
+  }
+}
+
+/* ── Very small 360px ─────────────────────── */
+@media (max-width: 360px) {
+  .hero-title {
+    font-size: 1.3rem;
+  }
+
+  .btn-hero-primary,
+  .btn-hero-secondary {
+    font-size: 0.7rem;
+    padding: 0.8rem;
   }
 }
