@@ -47,6 +47,23 @@ export default function Header() {
           <li>
             <a
               href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                navigateTo("home");
+                setTimeout(() => {
+                  document
+                    .querySelector(".how-it-works")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                }, 1000);
+              }}
+            >
+              How It Works
+            </a>
+          </li>
+
+          <li>
+            <a
+              href="#"
               className={currentPage === "marketplace" ? "active" : ""}
               onClick={(e) => navClick(e, "marketplace")}
             >

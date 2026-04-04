@@ -1,4 +1,5 @@
 import { useWallet } from "../../context/WalletContext";
+import { useEffect } from "react";
 import { useNavigation } from "../../context/NavigationContext";
 import "./Landing.css";
 
@@ -7,8 +8,8 @@ const STEPS = [
     icon: "🔌",
     title: "Connect Wallet",
     desc:
-      "Connect your MetaMask (Google Chrome extension) or any Web3 wallet. For mobile, I recommend also to use MetaMask wallet (Not an ad here :D). Just download Metamask for Android or IOS and be patient! No email or password needed — your wallet is your identity. You need to setup a wallet to be able to access all features of the website. Go to Connect wallet button at the top right corner and choose MetaMask." +
-      "Once installed, refresh the website so it can recognise installed Metamask. When you connect on a mobile wait a little when connecting until it says that you can return to the website.",
+      "Connect your MetaMask (Google Chrome extension) or any Web3 wallet. For mobile, I recommend also to use MetaMask wallet (Not an ad here 😁). Just download Metamask for Android or IOS and be patient! No email or password needed — your wallet is your identity. You need to setup a wallet to be able to access all features of the website. Go to Connect wallet button at the top right corner and choose MetaMask." +
+      "Once installed, refresh the website so it can recognise installed Metamask. When you connect on a mobile wait a little when connecting, until it says that you can return to the website.",
   },
   {
     icon: "🚰",
@@ -38,6 +39,10 @@ const STEPS = [
 export default function Landing() {
   const { isConnected, connectWallet } = useWallet();
   const { navigateTo } = useNavigation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
 
   return (
     <div className="landing-page">
@@ -94,7 +99,7 @@ export default function Landing() {
 
       {/* ── How It Works ────────────────────── */}
       <section className="how-it-works">
-        <p className="section-label">Simple but yet not so simple Process :D</p>
+        <p className="section-label">Simple but yet not so simple Process 😁</p>
         <h2 className="section-title">How It Works</h2>
 
         <div className="steps">
